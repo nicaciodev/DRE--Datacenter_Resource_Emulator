@@ -22,6 +22,7 @@ ___
 ## Estrutura do Repositório
 
 * `README.md`: Este arquivo, com a descrição e instruções do projeto.
+* `LICENSE`: Contém a licença deste projeto.
 
 ## Autor
 ___
