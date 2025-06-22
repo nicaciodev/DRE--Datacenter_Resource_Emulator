@@ -7,7 +7,7 @@ utilize Algoritmos Genéticos para otimizar uma função ou resolver um problema
 complexo de otimização. Você pode escolher problemas como otimização de
 rotas, alocação de recursos e design de redes neurais."
 >>>> 
->>>> (FIAP, Pos-Tech, Fase2, Tech-Challenge, Instruççoes)*
+>>>> (FIAP, Pos-Tech, Fase2, Tech-Challenge, Instruções)*
 #### [ RM363334 ]
 #### Robson Nicácio R. dos Santos
 ___
