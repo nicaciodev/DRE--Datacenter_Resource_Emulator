@@ -1,14 +1,19 @@
 ## DRE - Datacenter Resource Emulator
-![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-0.0-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-22%2F06%2F2025-green)
+![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.0-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-24%2F06%2F2025-green)
+
 ___
+
 #### Tech-Challenge da Fase 02 da Post-Tech (FIAP)
+
 >>>> *"O desafio consiste em projetar, implementar e testar um sistema que
 utilize Algoritmos Genéticos para otimizar uma função ou resolver um problema
 complexo de otimização. Você pode escolher problemas como otimização de
 rotas, alocação de recursos e design de redes neurais."
 >>>> 
 >>>> (FIAP, Pos-Tech, Fase2, Tech-Challenge, Instruções)*
+
 #### [ RM363334 ]
+
 #### Robson Nicácio R. dos Santos
 ___
 
@@ -19,10 +24,70 @@ ___
 >
 > Determinar o número mínimo de servidores físicos necessários para atender a novas demandas e otimizar a consolidação da infraestrutura.
 
+## Instalação 
+#### Pré-requisitos
+> Antes de começar, garanta que você tenha uma instalação do [Anaconda](https://www.anaconda.com/download/success) ou Miniconda em seu sistema. 
+> Se não tiver, o [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/main) é uma instalação leve e recomendada.
+
+#### Passo 1: Obtenha o Código-Fonte
+> Clone este repositório para a sua máquina local e navegue para a pasta do projeto.
+```
+git clone https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator.git 
+cd DRE--Datacenter_Resource_Emulator
+```
+
+#### Passo 2: Crie o Ambiente Conda
+> Os arquivos de ambiente (environment-[plataforma].txt) contêm a lista exata de todos os pacotes necessários para executar este projeto. 
+> Use o comando correspondente ao seu sistema operacional para criar um ambiente isolado chamado fiap_tech_challenge_2.
+
+###### Se você usa Linux:
+```
+conda create --name fiap_tech_challenge_2 --file conda-linux-64.txt
+```
+
+###### Se você usa Windows:
+```
+conda create --name fiap_tech_challenge_2 --file conda-win-64.txt
+```
+
+###### Se você usa macOS (Intel):
+```
+conda create --name fiap_tech_challenge_2 --file conda-osx-64.txt
+```
+
+##### Obs.:
+> Este comando pode levar alguns minutos, pois o Conda fará o download e a instalação 
+> de todos os pacotes especificados.
+
+
+#### Passo 3: Ative o Ambiente
+> Após a criação, você precisa "entrar" no ambiente para poder usá-lo.
+```
+conda activate fiap_tech_challenge_2
+```
+
+> Após a ativação, você verá o nome do ambiente entre parênteses no início do seu 
+> prompt do terminal, algo como (fiap_tech_challenge_2). 
+> Isso indica que o ambiente está ativo e pronto para uso.
+
+#### Passo 4: Executar o script principal
+```
+python main.py
+```
+
+
 ## Estrutura do Repositório
 
 * `README.md`: Este arquivo, com a descrição e instruções do projeto.
 * `LICENSE`: Contém a licença deste projeto.
+* `main.py`: Arquivo principal do projeto DRE.
+* `cenario_teste.json`: Arquivo que descreve um problema teste.
+* `conda-environment.bash`: Gerar arquivos [conda-...] para ambientes diferentes.
+* `conda-linux-64.txt`: Arquivo conda para ambiente linux.
+* `conda-lock.yml`: Arquivo do conda-lock.
+* `conda-osx-64.txt`: Arquivo conda para ambiente MAC.
+* `conda-win-64.txt`: Arquivo conda para ambiente Windows.
+* `environment.yml`: Gerência das libs utilizadas no Anaconda.
 
 ## Autor
 ___

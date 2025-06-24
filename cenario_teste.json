@@ -1,0 +1,20 @@
+{
+  "servidores": [
+    {"id": 0, "cpu_total": 32, "ram_total": 128},
+    {"id": 1, "cpu_total": 32, "ram_total": 128},
+    {"id": 2, "cpu_total": 24, "ram_total": 64}
+  ],
+  "vms_a_alocar": [
+    {"id": 0, "cpu_req": 4, "ram_req": 16},
+    {"id": 1, "cpu_req": 2, "ram_req": 8},
+    {"id": 2, "cpu_req": 2, "ram_req": 8},
+    {"id": 3, "cpu_req": 8, "ram_req": 32},
+    {"id": 4, "cpu_req": 4, "ram_req": 8},
+    {"id": 5, "cpu_req": 1, "ram_req": 4},
+    {"id": 6, "cpu_req": 1, "ram_req": 4},
+    {"id": 7, "cpu_req": 2, "ram_req": 16},
+    {"id": 8, "cpu_req": 4, "ram_req": 8},
+    {"id": 9, "cpu_req": 4, "ram_req": 16},
+    {"id": 10, "cpu_req": 2, "ram_req": 4}
+  ]
+}
