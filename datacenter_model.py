@@ -124,6 +124,36 @@ def carregar_cenario(caminho_arquivo: str) -> Dict[str, Any]:
 
         print(f"Cenário '{caminho_arquivo}' carregado com sucesso.")
         print(f"Encontrados {len(lista_servidores)} servidores e {len(lista_vms)} VMs para alocar.")
+
+        ram_total_dos_servidores = 0
+        ram_total_das_vms = 0
+        cpu_total_dos_servidores = 0
+        cpu_total_das_vms = 0
+
+        for serv in lista_servidores:
+            ram_total_dos_servidores += serv.ram_total
+            cpu_total_dos_servidores += serv.cpu_total
+
+        for vm in lista_vms:
+            ram_total_das_vms += vm.ram_req
+            cpu_total_das_vms += vm.cpu_req
+
+        if (
+            ram_total_das_vms > ram_total_dos_servidores or
+            cpu_total_das_vms > cpu_total_dos_servidores
+        ): 
+            print(f'''
+            As VMs não cabem no datacenter.
+
+            \t\t| DC  \t| VMs\t| Diferença
+            {'-'*50}
+            RAM \t| {ram_total_dos_servidores} \t| {ram_total_das_vms} \t| {ram_total_dos_servidores - ram_total_das_vms}
+            {'-'*50}
+            CPU \t| {cpu_total_dos_servidores} \t| {cpu_total_das_vms} \t| {cpu_total_dos_servidores - cpu_total_das_vms}
+
+            Programa encerrado.
+            ''')
+            exit()
         
         return {'servidores': lista_servidores, 'vms': lista_vms}
 
