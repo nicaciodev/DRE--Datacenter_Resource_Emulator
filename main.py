@@ -12,6 +12,10 @@ import random
 import numpy as np
 from datacenter_model import carregar_cenario
 from genetic_algorithm import (
+    repair_individual,
+    uniform_crossover,
+    smart_mutate,
+    generate_smarter_population,
     generate_initial_population,
     calculate_fitness,
     select_parents,
@@ -24,7 +28,13 @@ from visualization import draw_datacenter_state, draw_fitness_plot
 WIDTH, HEIGHT = 1600, 900
 FPS = 10
 PLOT_X_OFFSET = 1180
-CENARIO_FILE = 'cenario_teste.json'
+
+# NOTE: Cenário pequeno.
+# CENARIO_FILE = 'cenario_teste.json'
+
+# NOTE: Cenário grande.
+CENARIO_FILE = 'cenario_desafiador.json'
+
 POPULATION_SIZE = 100
 N_GENERATIONS = 1000
 MUTATION_PROBABILITY = 0.1
@@ -54,7 +64,16 @@ def main():
     servidores = datacenter_info['servidores']
     
     # --- 2. Setup do Algoritmo Genético ---
-    population = generate_initial_population(vms_a_alocar, servidores, POPULATION_SIZE)
+    # NOTE: População inicial aleatória:
+    # population = generate_initial_population(vms_a_alocar, servidores, POPULATION_SIZE)
+
+    # NOTE: Gera população inicial válida:
+    population = generate_smarter_population(vms_a_alocar, servidores, POPULATION_SIZE)
+    # TEST: Verificando o conetúdo populacional:
+    # print(population)
+    # print(f'Um indivíduo: {population[0]}')
+    # input('>>> Pausa <<<')
+
     best_fitness_history = []
     
     # --- 3. Loop Principal da Simulação ---
@@ -83,9 +102,30 @@ def main():
 
         while len(new_population) < POPULATION_SIZE:
             parent1, parent2 = select_parents(sorted_population, sorted_fitness)
-            child1, child2 = crossover(parent1, parent2)
-            child1 = mutate(child1, servidores, MUTATION_PROBABILITY)
-            child2 = mutate(child2, servidores, MUTATION_PROBABILITY)
+            # TEST: Visualizando o parent1
+            # print(f' parent1: {parent1}')
+            # print(f' tamanho: {len(parent1)}')
+            # input('>>> Pausa <<<')
+
+            # WARN: Este crossover está gerando filhos inválidos:
+            # child1, child2 = crossover(parent1, parent2)
+
+            # WARN: Este crossover pode gerar filhos inválidos:
+            child1, child2 = uniform_crossover(parent1, parent2)
+
+            # NOTE: Reparo: Garante que os filhos se tornem válidos
+            # WARN: Mas, não está entregando filhos válidos!
+            child1 = repair_individual(child1, vms_a_alocar, servidores)
+            child2 = repair_individual(child2, vms_a_alocar, servidores)
+
+            # NOTE: Mutação aleatória:
+            # child1 = mutate(child1, servidores, MUTATION_PROBABILITY)
+            # child2 = mutate(child2, servidores, MUTATION_PROBABILITY)
+
+            # NOTE: Mutação smart:
+            child1 = smart_mutate(child1, vms_a_alocar, servidores, MUTATION_PROBABILITY)
+            child2 = smart_mutate(child2, vms_a_alocar, servidores, MUTATION_PROBABILITY)
+
             new_population.append(child1)
             if len(new_population) < POPULATION_SIZE:
                 new_population.append(child2)
