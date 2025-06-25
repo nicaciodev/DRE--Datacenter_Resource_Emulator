@@ -1,5 +1,5 @@
 ## DRE - Datacenter Resource Emulator
-![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.0-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-24%2F06%2F2025-green)
+![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.1-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-25%2F06%2F2025-green)
 
 ___
 
@@ -24,7 +24,51 @@ ___
 >
 > Determinar o número mínimo de servidores físicos necessários para atender a novas demandas e otimizar a consolidação da infraestrutura.
 
-## Instalação 
+## Instalação via conda-lock
+> A ferramenta conda-lock para criar o ambiente diretamente a partir 
+> do arquivo de bloqueio mestre, garantindo a maior fidelidade ao ambiente de desenvolvimento original. 
+
+
+#### Pré-requisitos
+> Antes de começar, garanta que você tenha uma instalação do [Anaconda](https://www.anaconda.com/download/success).
+
+#### Passo 1: Obtenha o Código-Fonte
+> Clone este repositório para a sua máquina local e navegue para a pasta do projeto.
+```
+git clone https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator.git 
+cd DRE--Datacenter_Resource_Emulator
+```
+
+#### Passo 2: Instale o conda-lock
+> Esta ferramenta precisa ser instalada uma única vez no seu ambiente 
+> base do Conda.
+
+```
+conda install -c conda-forge conda-lock &&\
+ln -s ~/anaconda3/bin/conda-lock ~/anaconda3/condabin/
+```
+
+#### Passo 3: Crie a ative o ambiente
+> Este único comando lerá o arquivo conda-lock.yml, detectará sua 
+> plataforma e instalará todos os pacotes corretos para criar o ambiente 
+> fiap_tech_challenge_2.
+
+```
+conda-lock install --name fiap_tech_challenge_2 conda-lock.yml
+```
+
+> Após a criação, ative o ambiente:
+
+```
+conda activate fiap_tech_challenge_2
+```
+
+#### Passo 4: Executar o script principal
+```
+python main.py
+```
+
+## Instalação Via Anaconda 
 #### Pré-requisitos
 > Antes de começar, garanta que você tenha uma instalação do [Anaconda](https://www.anaconda.com/download/success) ou Miniconda em seu sistema. 
 > Se não tiver, o [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/main) é uma instalação leve e recomendada.
@@ -39,6 +83,17 @@ cd DRE--Datacenter_Resource_Emulator
 #### Passo 2: Crie o Ambiente Conda
 > Os arquivos de ambiente (environment-[plataforma].txt) contêm a lista exata de todos os pacotes necessários para executar este projeto. 
 > Use o comando correspondente ao seu sistema operacional para criar um ambiente isolado chamado fiap_tech_challenge_2.
+
+###### Ativando o Motor Anterior do Anaconda
+> Existe uma incompatibilidade entre o formato de arquivo detalhado 
+> (bom para reprodutibilidade) e o novo motor Libmamba que está ativo 
+> por padrão.
+>
+> No final isso será desfeito.
+
+```
+conda config --set solver classic
+```
 
 ###### Se você usa Linux:
 ```
@@ -58,6 +113,15 @@ conda create --name fiap_tech_challenge_2 --file conda-osx-64.txt
 ##### Obs.:
 > Este comando pode levar alguns minutos, pois o Conda fará o download e a instalação 
 > de todos os pacotes especificados.
+
+
+###### Ativando o Motar Atual do Anaconda
+> Para garantir que futuras operações do Conda sejam mais rápidas,
+> como de fábrica.
+
+```
+conda config --set solver libmamba
+```
 
 
 #### Passo 3: Ative o Ambiente
