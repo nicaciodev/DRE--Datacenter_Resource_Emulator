@@ -8,8 +8,6 @@ executa o Algoritmo Genético e renderiza a visualização.
 # ===[ Importações ]======================================================================
 import pygame
 import sys
-import random
-import numpy as np
 from datacenter_model import carregar_cenario
 from genetic_algorithm import (
     generate_initial_population,
