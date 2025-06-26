@@ -43,16 +43,41 @@ def main():
     pygame.display.set_caption("DRE - Datacenter Resource Emulator")
     clock = pygame.time.Clock()
 
-    datacenter_info = carregar_cenario(CENARIO_FILE)
+    datacenter_info = carregar_cenario(CENARIO_FILE) 
+    # TEST: Visualizando: datacenter_info.
+    # print('>>> Cenário >>> ', datacenter_info)
+    # exit()
+
     if not datacenter_info:
         print("Falha ao carregar o cenário. Encerrando o programa.")
         return
-        
-    vms_a_alocar = datacenter_info['vms']
+    
+    # Separando VMs e Servidores:
+    vms_a_alocar = datacenter_info['vms'] 
     servidores = datacenter_info['servidores']
+    # TEST: Visualizando: vms e servidores:
+    # Exemplo: VMs>> Obj.: VM(ID: 0, CPU: 4, RAM: 16GB) 
+    # print('>>> VMS >>> ', vms_a_alocar)
+    # print('-' * 50)
+    # Exemplo: Servidores>> Obj.: Servidor(ID: 0, CPU: 0/32, RAM: 0/128GB, VMs: 0) 
+    # print('>>> Servidores >>> ', servidores)
+    # exit()
     
     # --- 2. Setup do Algoritmo Genético ---
-    population = generate_initial_population(vms_a_alocar, servidores, POPULATION_SIZE)
+    # WARN: Cria uma população constituída somente de servidores.
+    #              \
+    #              \/
+    population = generate_initial_population(vms_a_alocar, servidores, POPULATION_SIZE) 
+    # NOTE:         /\
+    #               |
+    #     A forma de criar a população dessa função [generate_initial_population] é aleatória.
+    #     Não há uma checagem por indivíduos válidos.
+
+    # TEST: Visualizando: a população.
+    # Exemplo: [1, 1, 1, 2, 0, 1, 2, 2, 0, 2, 1]
+    # print('>>> População >>> ', population)
+    # exit()
+
     best_fitness_history = []
     
     # --- 3. Loop Principal da Simulação ---
@@ -64,11 +89,32 @@ def main():
                 running = False
 
         # --- Lógica do Algoritmo Genético a cada Geração ---
-        population_fitness = [calculate_fitness(individual, vms_a_alocar, servidores) for individual in population]
+        population_fitness = [calculate_fitness(individual, vms_a_alocar, servidores) for individual in population] 
+        # NOTE:                   /\
+        #                         |
+        #     [calculate_fitness], quando identifica um indivíduo inválido, marca com o valor infinito.
+        #     A população fitness conterá valores inválidos.
+
+        # Organizando os pares pelo fitness
         sorted_pairs = sorted(zip(population_fitness, population), key=lambda pair: pair[0])
+        # TEST: Verificando valores:
+        # Exemplos: >>> population_fitness: [3.0, 3.0, inf, 3.0,
+        #           >>> population: [[1, 2, 1, 0, 1, 0, 1, 1, 1, 2, 2], [0, 0, 1,
+        #           >>> zip: [(3.0, [2, 2, 0, 1, 2, 1, 2, 1, 1, 2, 1]), (3.0, [0, 1, 2, 2, 1,
+        # print(f'''
+        # >>> population_fitness: {population_fitness}
+        # {'-' * 50}
+        # >>> population: {population}
+        # {'-' * 50}
+        # >>> zip: {list(zip(population_fitness, population))}
+        # ''')
+        # exit()
+
+        # Separando população e fitness já ornagizados:
         sorted_population = [pair[1] for pair in sorted_pairs]
         sorted_fitness = [pair[0] for pair in sorted_pairs]
         
+        # Coletando apenas os melhores:
         best_solution_this_gen = sorted_population[0]
         best_fitness_this_gen = sorted_fitness[0]
         best_fitness_history.append(best_fitness_this_gen)
