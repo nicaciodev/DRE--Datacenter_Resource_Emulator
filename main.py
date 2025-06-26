@@ -12,6 +12,8 @@ import random
 import numpy as np
 from datacenter_model import carregar_cenario
 from genetic_algorithm import (
+    swap_mutation,
+    crossover_por_consenso,
     repair_individual,
     uniform_crossover,
     smart_mutate,
@@ -37,7 +39,7 @@ CENARIO_FILE = 'cenario_desafiador.json'
 
 POPULATION_SIZE = 100
 N_GENERATIONS = 1000
-MUTATION_PROBABILITY = 0.1
+MUTATION_PROBABILITY = 0.8
 ELITISM_SIZE = 2
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -85,6 +87,9 @@ def main():
                 running = False
 
         # --- Lógica do Algoritmo Genético a cada Geração ---
+        # TEST: Caos:
+        random.shuffle(population)
+
         population_fitness = [calculate_fitness(individual, vms_a_alocar, servidores) for individual in population]
         sorted_pairs = sorted(zip(population_fitness, population), key=lambda pair: pair[0])
         sorted_population = [pair[1] for pair in sorted_pairs]
@@ -115,16 +120,23 @@ def main():
 
             # NOTE: Reparo: Garante que os filhos se tornem válidos
             # WARN: Mas, não está entregando filhos válidos!
-            child1 = repair_individual(child1, vms_a_alocar, servidores)
-            child2 = repair_individual(child2, vms_a_alocar, servidores)
+            # child1 = repair_individual(child1, vms_a_alocar, servidores)
+            # child2 = repair_individual(child2, vms_a_alocar, servidores)
+
+            # NOTE: Crossover por consenso
+            child1, child2 = crossover_por_consenso(parent1, parent2, vms_a_alocar, servidores)
 
             # NOTE: Mutação aleatória:
             # child1 = mutate(child1, servidores, MUTATION_PROBABILITY)
             # child2 = mutate(child2, servidores, MUTATION_PROBABILITY)
 
             # NOTE: Mutação smart:
-            child1 = smart_mutate(child1, vms_a_alocar, servidores, MUTATION_PROBABILITY)
-            child2 = smart_mutate(child2, vms_a_alocar, servidores, MUTATION_PROBABILITY)
+            # child1 = smart_mutate(child1, vms_a_alocar, servidores, MUTATION_PROBABILITY)
+            # child2 = smart_mutate(child2, vms_a_alocar, servidores, MUTATION_PROBABILITY)
+
+            # NOTE: Swap Mutation:
+            child1 = swap_mutation(child1, vms_a_alocar, servidores, MUTATION_PROBABILITY)
+            child2 = swap_mutation(child2, vms_a_alocar, servidores, MUTATION_PROBABILITY)
 
             new_population.append(child1)
             if len(new_population) < POPULATION_SIZE:

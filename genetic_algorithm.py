@@ -145,6 +145,63 @@ def select_parents(population: List[List[int]], fitness_scores: List[float], num
 
 # ===[ 4. Crossover ]===================================================================
 
+# Em genetic_algorithm.py
+
+def crossover_por_consenso(parent1: List[int], parent2: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> Tuple[List[int], List[int]]:
+    """
+    Realiza um Crossover de Particionamento por Consenso.
+    Este método garante que os filhos gerados sejam sempre válidos.
+    """
+    
+    # --- Filho 1 ---
+    child1, _ = criar_filho_cpc(parent1, parent2, vms, servidores)
+    
+    # --- Filho 2 ---
+    # Para o segundo filho, podemos inverter a ordem dos pais para gerar diversidade
+    child2, _ = criar_filho_cpc(parent2, parent1, vms, servidores)
+
+    return child1, child2
+
+def criar_filho_cpc(pai_base: List[int], pai_guia: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]):
+    """
+    Função auxiliar que cria um único filho usando a lógica CPC.
+    Crossover de Particionamento por Consenso
+    """
+    num_vms = len(vms)
+    filho = [-1] * num_vms
+    
+    # 1. Particionamento: Encontra o consenso e o conflito
+    vms_consenso_indices = {i for i in range(num_vms) if pai_base[i] == pai_guia[i]}
+    vms_conflito_indices = [i for i in range(num_vms) if i not in vms_consenso_indices]
+    
+    # Embaralha a ordem de alocação do conflito para adicionar aleatoriedade
+    random.shuffle(vms_conflito_indices)
+
+    # 2. Construção da Base do Filho com o Consenso
+    temp_servidores = copy.deepcopy(servidores)
+    for vm_idx in vms_consenso_indices:
+        servidor_id = pai_base[vm_idx]
+        filho[vm_idx] = servidor_id
+        temp_servidores[servidor_id].alocar_vm(vms[vm_idx])
+
+    # 3. Alocação Inteligente do Conflito usando First Fit
+    for vm_idx in vms_conflito_indices:
+        vm_alocada = False
+        for servidor_id in range(len(servidores)):
+            if temp_servidores[servidor_id].pode_hospedar(vms[vm_idx]):
+                filho[vm_idx] = servidor_id
+                temp_servidores[servidor_id].alocar_vm(vms[vm_idx])
+                vm_alocada = True
+                break
+        
+        if not vm_alocada:
+            print(f"AVISO EM CROSSOVER: Não foi possível alocar a VM de conflito {vm_idx}.")
+            # Se não couber em lugar nenhum, alocamos em um lugar aleatório (gerando um indivíduo inválido que será punido)
+            filho[vm_idx] = random.randint(0, len(servidores) - 1)
+
+
+    return filho, temp_servidores
+
 def uniform_crossover(parent1: List[int], parent2: List[int]) -> Tuple[List[int], List[int]]:
     """
     Realiza o Uniform Crossover, onde cada gene do filho tem 50% de chance
@@ -244,6 +301,47 @@ def crossover(parent1: List[int], parent2: List[int]) -> Tuple[List[int], List[i
 
 
 # ===[ 5. Mutação ]======================================================================
+
+def swap_mutation(individual: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico], probability: float) -> List[int]:
+    """
+    Realiza a mutação de troca entre duas VMs, garantindo a validade da solução.
+    """
+    mutated_individual = list(individual)
+    if random.random() < probability and len(vms) >= 2:
+        # 1. Sorteia dois índices de VM diferentes
+        vm_index_1, vm_index_2 = random.sample(range(len(vms)), 2)
+
+        # 2. Pega as informações sobre as VMs e seus servidores atuais
+        server_id_1 = mutated_individual[vm_index_1]
+        server_id_2 = mutated_individual[vm_index_2]
+
+        # Não faz sentido trocar VMs que já estão no mesmo servidor
+        if server_id_1 == server_id_2:
+            return mutated_individual
+
+        vm1 = vms[vm_index_1]
+        vm2 = vms[vm_index_2]
+        servidor1 = servidores[server_id_1]
+        servidor2 = servidores[server_id_2]
+
+        # 3. Simula o estado dos servidores APÓS a troca
+        # Carga atual do Servidor 1 SEM a VM1, mas COM a VM2
+        nova_cpu_s1 = sum(vms[i].cpu_req for i, s_id in enumerate(mutated_individual) if s_id == server_id_1 and i != vm_index_1) + vm2.cpu_req
+        nova_ram_s1 = sum(vms[i].ram_req for i, s_id in enumerate(mutated_individual) if s_id == server_id_1 and i != vm_index_1) + vm2.ram_req
+
+        # Carga atual do Servidor 2 SEM a VM2, mas COM a VM1
+        nova_cpu_s2 = sum(vms[i].cpu_req for i, s_id in enumerate(mutated_individual) if s_id == server_id_2 and i != vm_index_2) + vm1.cpu_req
+        nova_ram_s2 = sum(vms[i].ram_req for i, s_id in enumerate(mutated_individual) if s_id == server_id_2 and i != vm_index_2) + vm1.ram_req
+
+        # 4. Verifica se a troca é válida
+        if (nova_cpu_s1 <= servidor1.cpu_total and nova_ram_s1 <= servidor1.ram_total and
+            nova_cpu_s2 <= servidor2.cpu_total and nova_ram_s2 <= servidor2.ram_total):
+            
+            # 5. Se for válida, aplica a troca
+            mutated_individual[vm_index_1] = server_id_2
+            mutated_individual[vm_index_2] = server_id_1
+
+    return mutated_individual
 
 def smart_mutate(individual: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico], probability: float) -> List[int]:
     """
