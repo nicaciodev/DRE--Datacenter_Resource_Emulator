@@ -28,9 +28,9 @@ from genetic_algorithm import (
 from visualization import draw_datacenter_state, draw_fitness_plot
 
 # ===[ Constantes ]=======================================================================
-WIDTH, HEIGHT = 1600, 900
+WIDTH, HEIGHT = 1490, 750
 FPS = 10
-PLOT_X_OFFSET = 1180
+PLOT_X_OFFSET = 1070
 
 # NOTE: Cenário pequeno.
 # CENARIO_FILE = 'cenario_teste.json'
