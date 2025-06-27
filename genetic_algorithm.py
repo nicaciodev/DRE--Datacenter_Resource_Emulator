@@ -20,6 +20,43 @@ from datacenter_model import MaquinaVirtual, ServidorFisico
 
 # ===[ 1. Geração da População Inicial ]================================================
 
+def generate_round_robin_population(vms: List[MaquinaVirtual], servidores: List[ServidorFisico], size: int) -> List[List[int]]:
+    """
+    Gera uma população homogênea onde todas as VMs são distribuídas
+    de forma sequencial (Round-Robin) entre os servidores.
+
+    Isso resulta em uma solução inicial que usa muitos servidores, ideal
+    para demonstrar a otimização do AG ao longo do tempo.
+    """
+    num_servidores = len(servidores)
+    num_vms = len(vms)
+    
+    # 1. Cria UMA única solução base usando a lógica Round-Robin com verificação de capacidade
+    base_individual = [-1] * num_vms
+    temp_servidores = copy.deepcopy(servidores)
+
+    for vm_index in range(num_vms):
+        vm_a_alocar = vms[vm_index]
+        vm_alocada = False
+        
+        # Tenta alocar a VM no servidor correspondente ao seu índice, em ciclo
+        for i in range(num_servidores):
+            # O operador % faz o ciclo: 0, 1, 2, 3, 4, 0, 1, 2...
+            servidor_id_alvo = (vm_index + i) % num_servidores
+            
+            if temp_servidores[servidor_id_alvo].pode_hospedar(vm_a_alocar):
+                temp_servidores[servidor_id_alvo].alocar_vm(vm_a_alocar)
+                base_individual[vm_index] = servidor_id_alvo
+                vm_alocada = True
+                break # VM alocada com sucesso, passa para a próxima VM
+
+        if not vm_alocada:
+            print(f"AVISO EM ROUND-ROBIN: A VM {vm_a_alocar.id} não pôde ser alocada em nenhum servidor.")
+
+    # 2. Cria a população final replicando a solução base
+    population = [list(base_individual) for _ in range(size)]
+    return population
+
 def generate_smarter_population(vms: List[MaquinaVirtual], servidores: List[ServidorFisico], size: int) -> List[List[int]]:
     """
     Gera uma população inicial onde cada indivíduo é uma solução válida.
