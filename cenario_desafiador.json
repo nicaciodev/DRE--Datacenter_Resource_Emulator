@@ -4,7 +4,12 @@
     {"id": 1, "cpu_total": 64, "ram_total": 256},
     {"id": 2, "cpu_total": 96, "ram_total": 128},
     {"id": 3, "cpu_total": 48, "ram_total": 128},
-    {"id": 4, "cpu_total": 32, "ram_total": 64}
+    {"id": 4, "cpu_total": 32, "ram_total": 64},
+    {"id": 5, "cpu_total": 32, "ram_total": 64},
+    {"id": 6, "cpu_total": 32, "ram_total": 64},
+    {"id": 7, "cpu_total": 32, "ram_total": 64},
+    {"id": 8, "cpu_total": 32, "ram_total": 64},
+    {"id": 9, "cpu_total": 32, "ram_total": 64}
   ],
   "vms_a_alocar": [
     {"id": 0, "cpu_req": 16, "ram_req": 64},

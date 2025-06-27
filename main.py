@@ -25,7 +25,7 @@ from genetic_algorithm import (
     crossover,
     mutate
 )
-from visualization import draw_datacenter_state, draw_fitness_plot
+from visualization import draw_datacenter_state, draw_fitness_plot, draw_stats_box
 
 # ===[ Constantes ]=======================================================================
 WIDTH, HEIGHT = 1490, 750
@@ -43,7 +43,7 @@ N_GENERATIONS = 1000
 MAX_GENS_NO_IMPROVEMENT = 200 # Para se não houver melhora por 200 gerações
 MUTATION_PROBABILITY = 0.8
 ELITISM_SIZE = 2
-WHITE = (255, 255, 255)
+BACKGROUND_COLOR = (190, 190, 190)
 BLACK = (0, 0, 0)
 
 # ===[ Função Principal ]=================================================================
@@ -171,11 +171,12 @@ def main():
         generation_count += 1
         
         # --- Lógica de Visualização (Pygame) ---
-        screen.fill(WHITE)
+        screen.fill(BACKGROUND_COLOR)
         
         # ALTERAÇÃO AQUI: Passando a constante PLOT_X_OFFSET como argumento
         draw_datacenter_state(screen, font, servidores, best_solution_this_gen, vms_a_alocar, PLOT_X_OFFSET)
         draw_fitness_plot(screen, best_fitness_history, PLOT_X_OFFSET)
+        draw_stats_box(screen, font, generation_count, best_fitness_this_gen, PLOT_X_OFFSET)
 
         pygame.display.flip()
         clock.tick(FPS)
@@ -183,7 +184,20 @@ def main():
     # --- 4. Finalização ---
     print("Simulação finalizada.")
     print(f"Melhor solução final encontrada (fitness): {best_fitness_history[-1] if best_fitness_history else 'N/A'}")
-    input("Pressione [Enter] no console para encerrar.")
+
+    # Loop de espera para manter a janela final aberta e responsiva
+    waiting_for_exit = True
+    while waiting_for_exit:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                waiting_for_exit = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    waiting_for_exit = False
+        
+        # O clock.tick() aqui é importante para não usar 100% da CPU enquanto espera
+        clock.tick(FPS)
+
     pygame.quit()
     sys.exit()
 

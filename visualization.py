@@ -26,6 +26,7 @@ PADDING = 20
 BAR_HEIGHT = 20
 VM_COLOR = (100, 150, 250)
 VM_TEXT_COLOR = (255, 255, 255)
+STATS_BOX_HEIGHT = 120 # Altura da nova caixa de estatísticas
 
 # --- Função Principal de Desenho do Datacenter ---
 
@@ -135,3 +136,27 @@ def draw_fitness_plot(screen: pygame.Surface, history: List[float], x_offset: in
     screen.blit(surf, (x_offset, PADDING))
     
     plt.close(fig)
+
+def draw_stats_box(screen: pygame.Surface, font: pygame.font.Font, generation: int, best_fitness: float, x_offset: int):
+    """
+    Desenha uma caixa de informações abaixo do gráfico com os dados da geração atual.
+    """
+    # Posição Y inicial da caixa (abaixo do gráfico + padding)
+    y_pos = PADDING + 450 # 450 é a altura aproximada do gráfico
+    
+    # Define o retângulo da caixa
+    stats_rect = pygame.Rect(x_offset, y_pos, 400, STATS_BOX_HEIGHT)
+    pygame.draw.rect(screen, (240, 240, 240), stats_rect) # Fundo cinza claro
+    pygame.draw.rect(screen, (50, 50, 50), stats_rect, 2, border_radius=5) # Borda escura
+
+    # Cria e posiciona o texto do título
+    title_text = font.render("Status da Simulação:", True, (0,0,0))
+    screen.blit(title_text, (x_offset + PADDING, y_pos + PADDING))
+
+    # Cria e posiciona o texto da geração
+    gen_text = font.render(f"Geração Atual: {generation}", True, (50,50,50))
+    screen.blit(gen_text, (x_offset + PADDING, y_pos + PADDING + 30))
+
+    # Cria e posiciona o texto do fitness
+    fitness_text = font.render(f"Melhor Fitness: {best_fitness:.2f}", True, (50,50,50))
+    screen.blit(fitness_text, (x_offset + PADDING, y_pos + PADDING + 55))
