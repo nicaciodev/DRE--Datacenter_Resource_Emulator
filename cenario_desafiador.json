@@ -9,7 +9,8 @@
     {"id": 6, "cpu_total": 32, "ram_total": 64},
     {"id": 7, "cpu_total": 32, "ram_total": 64},
     {"id": 8, "cpu_total": 32, "ram_total": 64},
-    {"id": 9, "cpu_total": 32, "ram_total": 64}
+    {"id": 9, "cpu_total": 32, "ram_total": 64},
+    {"id": 10, "cpu_total": 32, "ram_total": 64}
   ],
   "vms_a_alocar": [
     {"id": 0, "cpu_req": 16, "ram_req": 64},
