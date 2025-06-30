@@ -1,9 +1,5 @@
 ## DRE - Datacenter Resource Emulator
-<<<<<<< HEAD
-![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.2-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-25%2F06%2F2025-green)
-=======
-![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.1-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-25%2F06%2F2025-green)
->>>>>>> dev_gemini_v1.1
+![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.2-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-30%2F06%2F2025-green)
 
 ___
 
@@ -29,7 +25,7 @@ ___
 > Determinar o número mínimo de servidores físicos necessários para atender a novas demandas e otimizar a consolidação da infraestrutura.
 
 ## Instalação via conda-lock
-> A ferramenta conda-lock para criar o ambiente diretamente a partir 
+> A ferramenta conda-lock garante criar o ambiente diretamente a partir 
 > do arquivo de bloqueio mestre, garantindo a maior fidelidade ao ambiente de desenvolvimento original. 
 
 
@@ -41,9 +37,6 @@ ___
 ```
 <<<<<<< HEAD
 git clone https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator.git &&\
-=======
-git clone https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator.git 
->>>>>>> dev_gemini_v1.1
 cd DRE--Datacenter_Resource_Emulator
 ```
 
