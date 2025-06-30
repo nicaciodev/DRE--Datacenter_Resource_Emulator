@@ -1,5 +1,9 @@
 ## DRE - Datacenter Resource Emulator
+<<<<<<< HEAD
 ![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.2-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-25%2F06%2F2025-green)
+=======
+![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.1-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-25%2F06%2F2025-green)
+>>>>>>> dev_gemini_v1.1
 
 ___
 
@@ -35,7 +39,11 @@ ___
 #### Passo 1: Obtenha o Código-Fonte
 > Clone este repositório para a sua máquina local e navegue para a pasta do projeto.
 ```
+<<<<<<< HEAD
 git clone https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator.git &&\
+=======
+git clone https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator.git 
+>>>>>>> dev_gemini_v1.1
 cd DRE--Datacenter_Resource_Emulator
 ```
 

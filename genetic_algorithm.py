@@ -14,11 +14,84 @@ import random
 import copy
 from typing import List, Tuple, Dict, Any
 
-# Importa as classes do nosso modelo de datacenter
+# Importa as classes do modelo de datacenter
 from datacenter_model import MaquinaVirtual, ServidorFisico
 
 
 # ===[ 1. Geração da População Inicial ]================================================
+
+def generate_round_robin_population(vms: List[MaquinaVirtual], servidores: List[ServidorFisico], size: int) -> List[List[int]]:
+    """
+    Gera uma população homogênea onde todas as VMs são distribuídas
+    de forma sequencial (Round-Robin) entre os servidores.
+
+    Isso resulta em uma solução inicial que usa muitos servidores, ideal
+    para demonstrar a otimização do AG ao longo do tempo.
+    """
+    num_servidores = len(servidores)
+    num_vms = len(vms)
+    
+    # 1. Cria UMA única solução base usando a lógica Round-Robin com verificação de capacidade
+    base_individual = [-1] * num_vms
+    temp_servidores = copy.deepcopy(servidores)
+
+    for vm_index in range(num_vms):
+        vm_a_alocar = vms[vm_index]
+        vm_alocada = False
+        
+        # Tenta alocar a VM no servidor correspondente ao seu índice, em ciclo
+        for i in range(num_servidores):
+            # O operador % faz o ciclo: 0, 1, 2, 3, 4, 0, 1, 2...
+            servidor_id_alvo = (vm_index + i) % num_servidores
+            
+            if temp_servidores[servidor_id_alvo].pode_hospedar(vm_a_alocar):
+                temp_servidores[servidor_id_alvo].alocar_vm(vm_a_alocar)
+                base_individual[vm_index] = servidor_id_alvo
+                vm_alocada = True
+                break # VM alocada com sucesso, passa para a próxima VM
+
+        if not vm_alocada:
+            print(f"AVISO EM ROUND-ROBIN: A VM {vm_a_alocar.id} não pôde ser alocada em nenhum servidor.")
+
+    # 2. Cria a população final replicando a solução base
+    population = [list(base_individual) for _ in range(size)]
+    return population
+
+def generate_smarter_population(vms: List[MaquinaVirtual], servidores: List[ServidorFisico], size: int) -> List[List[int]]:
+    """
+    Gera uma população inicial onde cada indivíduo é uma solução válida.
+    Usa uma abordagem "First Fit" com aleatoriedade para garantir diversidade.
+    """
+    population = []
+    num_servidores = len(servidores)
+    
+    for _ in range(size):
+        individual = [-1] * len(vms)  # Inicia o indivíduo com valores inválidos
+        
+        # Embaralha a ordem das VMs para cada novo indivíduo para criar diversidade
+        vm_indices_embaralhados = list(range(len(vms)))
+        random.shuffle(vm_indices_embaralhados)
+
+        # Copia os servidores para simular a alocação para este indivíduo
+        temp_servidores = copy.deepcopy(servidores)
+
+        # Aplica a lógica "First Fit"
+        for vm_index in vm_indices_embaralhados:
+            vm_alocada = False
+            for servidor_index in range(num_servidores):
+                if temp_servidores[servidor_index].pode_hospedar(vms[vm_index]):
+                    temp_servidores[servidor_index].alocar_vm(vms[vm_index])
+                    individual[vm_index] = servidor_index
+                    vm_alocada = True
+                    break # VM alocada, passa para a próxima
+            
+            if not vm_alocada:
+                # Este caso é raro, mas pode acontecer se uma única VM for maior que qualquer servidor
+                print(f"AVISO: A VM {vms[vm_index].id} não pôde ser alocada em nenhum servidor.")
+
+        population.append(individual)
+        
+    return population
 
 def generate_initial_population(vms: List[MaquinaVirtual], servidores: List[ServidorFisico], size: int) -> List[List[int]]:
     """
@@ -109,6 +182,143 @@ def select_parents(population: List[List[int]], fitness_scores: List[float], num
 
 # ===[ 4. Crossover ]===================================================================
 
+# Em genetic_algorithm.py
+
+def crossover_por_consenso(parent1: List[int], parent2: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> Tuple[List[int], List[int]]:
+    """
+    Realiza um Crossover de Particionamento por Consenso.
+    Este método garante que os filhos gerados sejam sempre válidos.
+    """
+    
+    # --- Filho 1 ---
+    child1, _ = criar_filho_cpc(parent1, parent2, vms, servidores)
+    
+    # --- Filho 2 ---
+    # Para o segundo filho, podemos inverter a ordem dos pais para gerar diversidade
+    child2, _ = criar_filho_cpc(parent2, parent1, vms, servidores)
+
+    return child1, child2
+
+def criar_filho_cpc(pai_base: List[int], pai_guia: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]):
+    """
+    Função auxiliar que cria um único filho usando a lógica CPC.
+    Crossover de Particionamento por Consenso
+    """
+    num_vms = len(vms)
+    filho = [-1] * num_vms
+    
+    # 1. Particionamento: Encontra o consenso e o conflito
+    vms_consenso_indices = {i for i in range(num_vms) if pai_base[i] == pai_guia[i]}
+    vms_conflito_indices = [i for i in range(num_vms) if i not in vms_consenso_indices]
+    
+    # Embaralha a ordem de alocação do conflito para adicionar aleatoriedade
+    random.shuffle(vms_conflito_indices)
+
+    # 2. Construção da Base do Filho com o Consenso
+    temp_servidores = copy.deepcopy(servidores)
+    for vm_idx in vms_consenso_indices:
+        servidor_id = pai_base[vm_idx]
+        filho[vm_idx] = servidor_id
+        temp_servidores[servidor_id].alocar_vm(vms[vm_idx])
+
+    # 3. Alocação Inteligente do Conflito usando First Fit
+    for vm_idx in vms_conflito_indices:
+        vm_alocada = False
+        for servidor_id in range(len(servidores)):
+            if temp_servidores[servidor_id].pode_hospedar(vms[vm_idx]):
+                filho[vm_idx] = servidor_id
+                temp_servidores[servidor_id].alocar_vm(vms[vm_idx])
+                vm_alocada = True
+                break
+        
+        if not vm_alocada:
+            print(f"AVISO EM CROSSOVER: Não foi possível alocar a VM de conflito {vm_idx}.")
+            # Se não couber em lugar nenhum, alocamos em um lugar aleatório (gerando um indivíduo inválido que será punido)
+            filho[vm_idx] = random.randint(0, len(servidores) - 1)
+
+
+    return filho, temp_servidores
+
+def uniform_crossover(parent1: List[int], parent2: List[int]) -> Tuple[List[int], List[int]]:
+    """
+    Realiza o Uniform Crossover, onde cada gene do filho tem 50% de chance
+    de vir do Pai 1 ou do Pai 2. Este método promove mais mistura.
+    """
+    size = len(parent1)
+    child1 = [-1] * size
+    child2 = [-1] * size
+    for i in range(size):
+        if random.random() < 0.5:
+            child1[i] = parent1[i]
+            child2[i] = parent2[i]
+        else:
+            child1[i] = parent2[i]
+            child2[i] = parent1[i]
+    return child1, child2
+
+def repair_individual(individual: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> List[int]:
+    """
+    Repara um indivíduo para garantir que ele seja válido (não sobrecarregue servidores).
+    """
+    repaired_individual = list(individual)
+    
+    # 1. Simula o estado atual do indivíduo para encontrar servidores sobrecarregados
+    temp_servidores = {i: [] for i in range(len(servidores))}
+    for vm_idx, s_id in enumerate(repaired_individual):
+        temp_servidores[s_id].append(vms[vm_idx])
+
+    # 2. Itera para encontrar e corrigir sobrecargas
+    for s_id, vms_alocadas in temp_servidores.items():
+        servidor = servidores[s_id]
+        
+        # Calcula o uso atual
+        cpu_usada = sum(vm.cpu_req for vm in vms_alocadas)
+        ram_usada = sum(vm.ram_req for vm in vms_alocadas)
+
+        # Enquanto o servidor estiver sobrecarregado
+        while cpu_usada > servidor.cpu_total or ram_usada > servidor.ram_total:
+            # Pega uma VM aleatória deste servidor sobrecarregado para mover
+            vm_para_mover = random.choice(vms_alocadas)
+            vm_idx_original = [i for i, vm in enumerate(vms) if vm.id == vm_para_mover.id][0]
+
+            # Encontra um novo lar em um servidor menos cheio
+            # Ordena os outros servidores pelo uso de CPU (ou RAM), do menor para o maior
+            outros_servidores_ids = sorted(
+                [i for i in range(len(servidores)) if i != s_id],
+                key=lambda j: sum(vm.cpu_req for vm in temp_servidores[j])
+            )
+
+            # Tenta mover a VM
+            movida = False
+            for new_s_id in outros_servidores_ids:
+                # Verifica se o novo servidor pode hospedar a VM
+                new_servidor = servidores[new_s_id]
+                new_cpu_usada = sum(vm.cpu_req for vm in temp_servidores[new_s_id])
+                new_ram_usada = sum(vm.ram_req for vm in temp_servidores[new_s_id])
+                
+                if (new_cpu_usada + vm_para_mover.cpu_req <= new_servidor.cpu_total and
+                    new_ram_usada + vm_para_mover.ram_req <= new_servidor.ram_total):
+                    
+                    # Move a VM
+                    repaired_individual[vm_idx_original] = new_s_id
+                    
+                    # Atualiza nossas listas temporárias para o próximo loop de verificação
+                    vms_alocadas.remove(vm_para_mover)
+                    temp_servidores[new_s_id].append(vm_para_mover)
+                    
+                    # Recalcula o uso do servidor original
+                    cpu_usada = sum(vm.cpu_req for vm in vms_alocadas)
+                    ram_usada = sum(vm.ram_req for vm in vms_alocadas)
+                    movida = True
+                    break
+            
+            if not movida:
+                # Se não conseguiu mover, pode indicar um problema sério (ex: não há espaço em lugar nenhum)
+                # Para agora, vamos apenas parar de tentar reparar este servidor.
+                break
+                
+    return repaired_individual
+
 def crossover(parent1: List[int], parent2: List[int]) -> Tuple[List[int], List[int]]:
     """
     Realiza o crossover de ponto único entre dois pais para gerar dois filhos.
@@ -128,6 +338,84 @@ def crossover(parent1: List[int], parent2: List[int]) -> Tuple[List[int], List[i
 
 
 # ===[ 5. Mutação ]======================================================================
+
+def swap_mutation(individual: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico], probability: float) -> List[int]:
+    """
+    Realiza a mutação de troca entre duas VMs, garantindo a validade da solução.
+    """
+    mutated_individual = list(individual)
+    if random.random() < probability and len(vms) >= 2:
+        # 1. Sorteia dois índices de VM diferentes
+        vm_index_1, vm_index_2 = random.sample(range(len(vms)), 2)
+
+        # 2. Pega as informações sobre as VMs e seus servidores atuais
+        server_id_1 = mutated_individual[vm_index_1]
+        server_id_2 = mutated_individual[vm_index_2]
+
+        # Não faz sentido trocar VMs que já estão no mesmo servidor
+        if server_id_1 == server_id_2:
+            return mutated_individual
+
+        vm1 = vms[vm_index_1]
+        vm2 = vms[vm_index_2]
+        servidor1 = servidores[server_id_1]
+        servidor2 = servidores[server_id_2]
+
+        # 3. Simula o estado dos servidores APÓS a troca
+        # Carga atual do Servidor 1 SEM a VM1, mas COM a VM2
+        nova_cpu_s1 = sum(vms[i].cpu_req for i, s_id in enumerate(mutated_individual) if s_id == server_id_1 and i != vm_index_1) + vm2.cpu_req
+        nova_ram_s1 = sum(vms[i].ram_req for i, s_id in enumerate(mutated_individual) if s_id == server_id_1 and i != vm_index_1) + vm2.ram_req
+
+        # Carga atual do Servidor 2 SEM a VM2, mas COM a VM1
+        nova_cpu_s2 = sum(vms[i].cpu_req for i, s_id in enumerate(mutated_individual) if s_id == server_id_2 and i != vm_index_2) + vm1.cpu_req
+        nova_ram_s2 = sum(vms[i].ram_req for i, s_id in enumerate(mutated_individual) if s_id == server_id_2 and i != vm_index_2) + vm1.ram_req
+
+        # 4. Verifica se a troca é válida
+        if (nova_cpu_s1 <= servidor1.cpu_total and nova_ram_s1 <= servidor1.ram_total and
+            nova_cpu_s2 <= servidor2.cpu_total and nova_ram_s2 <= servidor2.ram_total):
+            
+            # 5. Se for válida, aplica a troca
+            mutated_individual[vm_index_1] = server_id_2
+            mutated_individual[vm_index_2] = server_id_1
+
+    return mutated_individual
+
+def smart_mutate(individual: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico], probability: float) -> List[int]:
+    """
+    Aplica uma mutação inteligente que garante que o filho resultante seja válido.
+    """
+    mutated_individual = list(individual)
+    
+    if random.random() < probability:
+        # 1. Escolhe uma VM aleatória para mover
+        vm_index_to_move = random.randint(0, len(mutated_individual) - 1)
+        vm_to_move = vms[vm_index_to_move]
+        current_server_id = mutated_individual[vm_index_to_move]
+
+        # 2. Encontra uma lista de servidores alternativos que podem hospedar a VM
+        possible_new_homes = []
+        for i, servidor in enumerate(servidores):
+            # Não pode ser o mesmo servidor e precisa ter capacidade
+            if i != current_server_id:
+                # Simula a alocação para verificar a capacidade futura
+                # Cria uma cópia para não interferir nos cálculos de outros servidores
+                temp_servidor = copy.deepcopy(servidor)
+                
+                # Aloca temporariamente as VMs que já estão neste servidor
+                vms_on_this_server = [vms[idx] for idx, s_id in enumerate(individual) if s_id == i]
+                for vm in vms_on_this_server:
+                    temp_servidor.alocar_vm(vm)
+                
+                # Agora verifica se a nova VM cabe
+                if temp_servidor.pode_hospedar(vm_to_move):
+                    possible_new_homes.append(i)
+
+        # 3. Se encontrou um novo lar possível, move a VM
+        if possible_new_homes:
+            new_server_id = random.choice(possible_new_homes)
+            mutated_individual[vm_index_to_move] = new_server_id
+            
+    return mutated_individual
 
 def mutate(individual: List[int], servidores: List[ServidorFisico], probability: float) -> List[int]:
     """
