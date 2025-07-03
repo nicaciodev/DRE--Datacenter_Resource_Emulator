@@ -93,6 +93,9 @@ def generate_smarter_population(vms: List[MaquinaVirtual], servidores: List[Serv
         
     return population
 
+    # NOTE: 
+    #     A forma de criar a população dessa função [generate_initial_population] é aleatória.
+    #     Não há uma checagem por indivíduos válidos.
 def generate_initial_population(vms: List[MaquinaVirtual], servidores: List[ServidorFisico], size: int) -> List[List[int]]:
     """
     Gera uma população inicial de soluções (indivíduos) de forma aleatória.
@@ -152,6 +155,8 @@ def calculate_fitness(individual: List[int], vms: List[MaquinaVirtual], servidor
 
     # O fitness primário é o número de servidores que foram utilizados
     servidores_usados = sum(1 for s in temp_servidores if len(s.vms_hospedadas) > 0)
+    # TODO: Das melhores solução, também escolher as que usam o máximo de um servidor, leberando
+    # recursos dos oustros servidores que também fazem parte da solução sub-ótima.
     
     # TODO: (Opcional Avançado): Adicionar um fator de balanceamento como objetivo secundário
     # Ex: calcular o desvio padrão do uso de CPU/RAM e adicionar ao fitness
@@ -205,7 +210,7 @@ def criar_filho_cpc(pai_base: List[int], pai_guia: List[int], vms: List[MaquinaV
     Crossover de Particionamento por Consenso
     """
     num_vms = len(vms)
-    filho = [-1] * num_vms
+    filho = [-1] * num_vms # Preenche o filho inicialmente com valores inválidos.
     
     # 1. Particionamento: Encontra o consenso e o conflito
     vms_consenso_indices = {i for i in range(num_vms) if pai_base[i] == pai_guia[i]}

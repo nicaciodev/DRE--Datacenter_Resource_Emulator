@@ -31,18 +31,21 @@ def draw_datacenter_state(screen: pygame.Surface, font: pygame.font.Font, servid
     """
     Desenha o estado do datacenter em uma superfície rolável (viewport).
     """
+
+    # Desenhando o retângulo de visualização do mundo.
     viewport_rect = pygame.Rect(0, 0, plot_x_offset - PADDING, screen.get_height())
 
-    # --- LÓGICA DE LAYOUT CORRIGIDA (PARA MÚLTIPLAS COLUNAS) ---
     # Calcula a largura e o número de colunas necessárias para o "mundo"
     servidores_por_coluna = viewport_rect.height // (SERVER_HEIGHT + PADDING)
     if servidores_por_coluna == 0: servidores_por_coluna = 1
     num_colunas = -(-len(servidores) // servidores_por_coluna) # Truque para arredondar para cima
     total_world_width = num_colunas * (SERVER_WIDTH + PADDING) + PADDING
 
+    # Criando a paisagem.
     world_surface = pygame.Surface((total_world_width, viewport_rect.height))
     world_surface.fill(screen.get_at((1,1)))
 
+    # Simulando a alocação dos objetos a desenhar.
     temp_servidores = [ServidorFisico(s.id, s.cpu_total, s.ram_total) for s in servidores]
     for vm_index, servidor_id in enumerate(best_solution):
         if 0 <= servidor_id < len(temp_servidores):
@@ -68,21 +71,28 @@ def draw_datacenter_state(screen: pygame.Surface, font: pygame.font.Font, servid
 
     return scroll_x
 
-# O resto do arquivo permanece o mesmo
 def draw_servidor(screen: pygame.Surface, font: pygame.font.Font, servidor: ServidorFisico, x: int, y: int):
     rect = pygame.Rect(x, y, SERVER_WIDTH, SERVER_HEIGHT)
     pygame.draw.rect(screen, (245, 245, 245), rect, border_radius=5)
     pygame.draw.rect(screen, (50, 50, 50), rect, 2, border_radius=5)
+
+    # Escrevendo o cabeçalho.
     id_text = font.render(f"Servidor ID: {servidor.id} ({len(servidor.vms_hospedadas)} VMs)", True, (0,0,0))
     screen.blit(id_text, (x + 10, y + 10))
+
+    # Desenhando as barras.
     cpu_percent = (servidor.cpu_usada / servidor.cpu_total) if servidor.cpu_total > 0 else 0
     draw_usage_bar(screen, font, f"CPU: {servidor.cpu_usada}/{servidor.cpu_total}", cpu_percent, x + 10, y + 40, (255, 100, 100))
     ram_percent = (servidor.ram_usada / servidor.ram_total) if servidor.ram_total > 0 else 0
     draw_usage_bar(screen, font, f"RAM: {servidor.ram_usada}/{servidor.ram_total} GB", ram_percent, x + 10, y + 80, (100, 100, 255))
+
+    # Desenhando as VMs.
     vm_x, vm_y = x + 10, y + 135
     server_bottom_limit = y + SERVER_HEIGHT - PADDING
     for vm in servidor.vms_hospedadas:
-        if vm_y + 25 > server_bottom_limit:
+        if vm_y + 25 > server_bottom_limit: # Desenha reticências se estoura a caixa.
+            ellipsis_rect = pygame.Rect(vm_x, vm_y, 60, 20) # Caixa amarela das reticências.
+            pygame.draw.rect(screen, (255, 240, 100), ellipsis_rect, border_radius=3)
             ellipsis_text = font.render("...", True, (50, 50, 50))
             screen.blit(ellipsis_text, (vm_x, vm_y))
             break

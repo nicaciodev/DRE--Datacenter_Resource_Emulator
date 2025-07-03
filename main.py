@@ -4,8 +4,6 @@ Arquivo Principal do Projeto DRE (Datacenter Resource Emulator)
 """
 import pygame
 import sys
-import random
-import numpy as np
 
 from datacenter_model import carregar_cenario
 from genetic_algorithm import (
@@ -39,41 +37,17 @@ def main():
     clock = pygame.time.Clock()
 
     datacenter_info = carregar_cenario(CENARIO_FILE) 
-    # TEST: Visualizando: datacenter_info.
-    # print('>>> Cenário >>> ', datacenter_info)
-    # exit()
-
     if not datacenter_info:
         print("Falha ao carregar o cenário. Encerrando o programa.")
-        return
+        exit()
     
     # Separando VMs e Servidores:
     vms_a_alocar = datacenter_info['vms'] 
     servidores = datacenter_info['servidores']
-    # TEST: Visualizando: vms e servidores:
-    # Exemplo: VMs>> Obj.: VM(ID: 0, CPU: 4, RAM: 16GB) 
-    # print('>>> VMS >>> ', vms_a_alocar)
-    # print('-' * 50)
-    # Exemplo: Servidores>> Obj.: Servidor(ID: 0, CPU: 0/32, RAM: 0/128GB, VMs: 0) 
-    # print('>>> Servidores >>> ', servidores)
-    # exit()
     
     # --- 2. Setup do Algoritmo Genético ---
-    # WARN: Cria uma população constituída somente de servidores.
-
-    # population = generate_initial_population(vms_a_alocar, servidores, POPULATION_SIZE) 
-    # NOTE:         /\
-    #               |
-    #     A forma de criar a população dessa função [generate_initial_population] é aleatória.
-    #     Não há uma checagem por indivíduos válidos.
-
     # NOTE: Gerando a população normalmente distribuída.
     population = generate_round_robin_population(vms_a_alocar, servidores, POPULATION_SIZE)
-
-    # TEST: Visualizando: a população.
-    # Exemplo: [1, 1, 1, 2, 0, 1, 2, 2, 0, 2, 1]
-    # print('>>> População >>> ', population)
-    # exit()
 
     best_fitness_history = []
     best_solution_this_gen = population[0]
@@ -93,31 +67,20 @@ def main():
                 scroll_x -= event.y * 40
         
         if not (generation_count >= N_GENERATIONS or generations_without_improvement >= MAX_GENS_NO_IMPROVEMENT):
+            # NOTE: Fitness.
             population_fitness = [calculate_fitness(individual, vms_a_alocar, servidores) for individual in population]
             
+            # Ordenando a população por fitness:
             sorted_pairs = sorted(zip(population_fitness, population), key=lambda pair: pair[0])
-            # TEST: Verificando valores:
-            # Exemplos: >>> population_fitness: [3.0, 3.0, inf, 3.0,
-            #           >>> population: [[1, 2, 1, 0, 1, 0, 1, 1, 1, 2, 2], [0, 0, 1,
-            #           >>> zip: [(3.0, [2, 2, 0, 1, 2, 1, 2, 1, 1, 2, 1]), (3.0, [0, 1, 2, 2, 1,
-            # print(f'''
-            # >>> population_fitness: {population_fitness}
-            # {'-' * 50}
-            # >>> population: {population}
-            # {'-' * 50}
-            # >>> zip: {list(zip(population_fitness, population))}
-            # ''')
-            # exit()
-
             sorted_population = [pair[1] for pair in sorted_pairs]
             sorted_fitness = [pair[0] for pair in sorted_pairs]
             
+            # Armazenando a merlhor solução:
             best_solution_this_gen = sorted_population[0]
             best_fitness_this_gen = sorted_fitness[0]
-            
             best_fitness_history.append(best_fitness_this_gen)
             
-            if generation_count % 10 == 0:
+            if generation_count % 10 == 0: # Exibindo com menos poluição visual no terminal, (a cada 10%).
                 print(f"Geração {generation_count}: Melhor Fitness = {best_fitness_this_gen}")
 
             if best_fitness_this_gen < last_best_fitness:
@@ -129,20 +92,25 @@ def main():
             if generations_without_improvement >= MAX_GENS_NO_IMPROVEMENT:
                 print(f"\nConvergência atingida na Geração {generation_count}!")
             
+            # NOTE: Nova Geração.
             new_population = []
             new_population.extend(sorted_population[:ELITISM_SIZE])
             while len(new_population) < POPULATION_SIZE:
-                # CORREÇÃO AQUI: Passando a lista 'sorted_fitness' como o segundo argumento
+                # NOTE: Crossover.
                 parent1, parent2 = select_parents(sorted_population, sorted_fitness)
                 child1, child2 = crossover_por_consenso(parent1, parent2, vms_a_alocar, servidores)
+
+                # NOTE: Mutação.
                 child1 = swap_mutation(child1, vms_a_alocar, servidores, MUTATION_PROBABILITY)
                 child2 = swap_mutation(child2, vms_a_alocar, servidores, MUTATION_PROBABILITY)
                 new_population.append(child1)
                 if len(new_population) < POPULATION_SIZE:
                     new_population.append(child2)
+
             population = new_population
             generation_count += 1
         
+        # NOTE: Ambiente Gráfico.
         screen.fill(BACKGROUND_COLOR)
         scroll_x = draw_datacenter_state(screen, font, servidores, best_solution_this_gen, vms_a_alocar, PLOT_X_OFFSET, scroll_x)
         plot_width = draw_fitness_plot(screen, best_fitness_history, PLOT_X_OFFSET)
