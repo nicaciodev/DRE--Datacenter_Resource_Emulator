@@ -1,7 +1,10 @@
-# -*- coding: utf-8 -*-
 """
 Módulo responsável por toda a lógica de visualização do projeto DRE.
 """
+
+
+
+# Importando
 import pygame
 from typing import List, Tuple
 from datacenter_model import ServidorFisico, MaquinaVirtual
@@ -14,8 +17,9 @@ try:
 except ImportError:
     MATPLOTLIB_AVAILABLE = False
 
+
+
 # --- Constantes de Visualização ---
-# ALTERADO: Altura ajustada para caber 3 servidores na vertical
 SERVER_WIDTH = 300
 SERVER_HEIGHT = 220
 PADDING = 20
@@ -24,6 +28,8 @@ VM_COLOR = (100, 150, 250)
 VM_TEXT_COLOR = (255, 255, 255)
 STATS_BOX_HEIGHT = 120
 PLOT_AREA_WIDTH = 400
+
+
 
 # --- Função Principal de Desenho do Datacenter ---
 

@@ -1,7 +1,10 @@
-# -*- coding: utf-8 -*-
 """
 Arquivo Principal do Projeto DRE (Datacenter Resource Emulator)
 """
+
+
+
+#===[ Importando ]======================================================================
 import pygame
 import sys
 
@@ -15,6 +18,8 @@ from genetic_algorithm import (
 )
 from visualization import draw_datacenter_state, draw_fitness_plot, draw_stats_box
 
+
+
 # ===[ Constantes ]=======================================================================
 WIDTH, HEIGHT = 1280, 740
 FPS = 30
@@ -26,6 +31,8 @@ MAX_GENS_NO_IMPROVEMENT = 200
 MUTATION_PROBABILITY = 0.5
 ELITISM_SIZE = 2
 BACKGROUND_COLOR = (225, 225, 225)
+
+
 
 # ===[ Função Principal ]=================================================================
 def main():
@@ -140,5 +147,8 @@ def main():
     pygame.quit()
     sys.exit()
 
+
+
+# Chamadno a função principal por default.
 if __name__ == '__main__':
     main()

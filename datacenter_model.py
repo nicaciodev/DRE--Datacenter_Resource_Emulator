@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Módulo para modelar as entidades do datacenter para o projeto DRE.
 
@@ -8,8 +7,13 @@ Este arquivo define as classes para:
 - E funções para carregar cenários de simulação.
 """
 
+
+
+# Importando
 import json
 from typing import List, Dict, Any
+
+
 
 # ===[ Definição da Classe MaquinaVirtual ]==============================================
 
@@ -33,6 +37,7 @@ class MaquinaVirtual:
     def __repr__(self) -> str:
         """Retorna uma representação em string do objeto, útil para debug."""
         return f"VM(ID: {self.id}, CPU: {self.cpu_req}, RAM: {self.ram_req}GB)"
+
 
 
 # ===[ Definição da Classe ServidorFisico ]===============================================
@@ -93,6 +98,7 @@ class ServidorFisico:
                 f"CPU: {self.cpu_usada}/{self.cpu_total}, "
                 f"RAM: {self.ram_usada}/{self.ram_total}GB, "
                 f"VMs: {len(self.vms_hospedadas)})")
+
 
 
 # ===[ Função para Carregar Cenário ]=====================================================
