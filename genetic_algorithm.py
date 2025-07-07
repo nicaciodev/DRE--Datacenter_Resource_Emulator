@@ -42,16 +42,32 @@ def generate_round_robin_population(vms: List[MaquinaVirtual], servidores: List[
         vm_a_alocar = vms[vm_index]
         vm_alocada = False
         
+        # NOTE: Esta forma de alocar tem viés na ordem dos servidores
         # Tenta alocar a VM no servidor correspondente ao seu índice, em ciclo
         for i in range(num_servidores):
             # O operador % faz o ciclo: 0, 1, 2, 3, 4, 0, 1, 2...
             servidor_id_alvo = (vm_index + i) % num_servidores
-            
             if temp_servidores[servidor_id_alvo].pode_hospedar(vm_a_alocar):
                 temp_servidores[servidor_id_alvo].alocar_vm(vm_a_alocar)
                 base_individual[vm_index] = servidor_id_alvo
                 vm_alocada = True
                 break # VM alocada com sucesso, passa para a próxima VM
+
+        # # HACK: Usando a lógica "Worst Fit"
+        # # Ordena os servidores pelo maior espaço de RAM livre
+        # # Com tudo, isso 
+        # servidores_disponiveis_ordenados = sorted(
+        #     range(num_servidores),
+        #     key=lambda s_id: temp_servidores[s_id].ram_disponivel,
+        #     reverse=True
+        # )
+        # # Itera sobre os servidores na ordem do mais folgado para o mais cheio
+        # for servidor_id in servidores_disponiveis_ordenados:
+        #     if temp_servidores[servidor_id].pode_hospedar(vm_a_alocar):
+        #         temp_servidores[servidor_id].alocar_vm(vm_a_alocar)
+        #         base_individual[vm_index] = servidor_id
+        #         vm_alocada = True
+        #         break
 
         if not vm_alocada:
             print(f"AVISO EM ROUND-ROBIN: A VM {vm_a_alocar.id} não pôde ser alocada em nenhum servidor.")
@@ -163,13 +179,33 @@ def criar_filho_cpc(pai_base: List[int], pai_guia: List[int], vms: List[MaquinaV
         filho[vm_idx] = servidor_id
         temp_servidores[servidor_id].alocar_vm(vms[vm_idx])
 
-    # 3. Alocação Inteligente do Conflito usando First Fit
+    # NOTE: Esta forma tem viés com a ordem dos servidores.
+    # # 3. Alocação Inteligente do Conflito usando First Fit
+    # for vm_idx in vms_conflito_indices:
+    #     vm_alocada = False
+    #     for servidor_id in range(len(servidores)):
+    #         if temp_servidores[servidor_id].pode_hospedar(vms[vm_idx]):
+    #             filho[vm_idx] = servidor_id
+    #             temp_servidores[servidor_id].alocar_vm(vms[vm_idx])
+    #             vm_alocada = True
+    #             break
+
+    # HACK: Lógica "Worst Fit": Ordena os servidores.
     for vm_idx in vms_conflito_indices:
+        vm_a_alocar = vms[vm_idx]
         vm_alocada = False
-        for servidor_id in range(len(servidores)):
-            if temp_servidores[servidor_id].pode_hospedar(vms[vm_idx]):
+        
+        # LÓGICA "WORST FIT" REFINADA: Ordena por RAM livre e depois por CPU livre
+        servidores_disponiveis_ordenados = sorted(
+            range(len(servidores)),
+            key=lambda s_id: (temp_servidores[s_id].ram_disponivel, temp_servidores[s_id].cpu_disponivel),
+            reverse=True
+        )
+
+        for servidor_id in servidores_disponiveis_ordenados:
+            if temp_servidores[servidor_id].pode_hospedar(vm_a_alocar):
                 filho[vm_idx] = servidor_id
-                temp_servidores[servidor_id].alocar_vm(vms[vm_idx])
+                temp_servidores[servidor_id].alocar_vm(vm_a_alocar)
                 vm_alocada = True
                 break
         
