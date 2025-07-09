@@ -11,8 +11,11 @@ import sys
 from datacenter_model import carregar_cenario
 from genetic_algorithm import (
     generate_round_robin_population,
+    robin_hood_mutation,
     swap_mutation,
     crossover_por_consenso,
+    doac_crossover,
+    doac_crossover_v4,
     calculate_fitness,
     select_parents
 )
@@ -103,13 +106,22 @@ def main():
             new_population = []
             new_population.extend(sorted_population[:ELITISM_SIZE])
             while len(new_population) < POPULATION_SIZE:
-                # NOTE: Crossover.
+                # NOTE: Crossover Início.
                 parent1, parent2 = select_parents(sorted_population, sorted_fitness)
-                child1, child2 = crossover_por_consenso(parent1, parent2, vms_a_alocar, servidores)
+
+                # NOTE: Por consenso dos genes dos pais.
+                # child1, child2 = crossover_por_consenso(parent1, parent2, vms_a_alocar, servidores)
+                # TEST: DOAC
+                # child1, child2 = doac_crossover(parent1, parent2, vms_a_alocar, servidores)
+                # HACK: DOAC v4:
+                child1, child2 = doac_crossover_v4(parent1, parent2, vms_a_alocar, servidores)
 
                 # NOTE: Mutação.
                 child1 = swap_mutation(child1, vms_a_alocar, servidores, MUTATION_PROBABILITY)
-                child2 = swap_mutation(child2, vms_a_alocar, servidores, MUTATION_PROBABILITY)
+                child1 = swap_mutation(child1, vms_a_alocar, servidores, MUTATION_PROBABILITY)
+                # HACK: 
+                # child1 = robin_hood_mutation(child1, vms_a_alocar, servidores, MUTATION_PROBABILITY)
+                # child2 = robin_hood_mutation(child2, vms_a_alocar, servidores, MUTATION_PROBABILITY)
                 new_population.append(child1)
                 if len(new_population) < POPULATION_SIZE:
                     new_population.append(child2)
