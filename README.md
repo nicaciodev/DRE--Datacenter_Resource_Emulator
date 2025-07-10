@@ -1,5 +1,5 @@
 ## DRE - Datacenter Resource Emulator
-![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.2-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-30%2F06%2F2025-green)
+![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.2-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-09%2F07%2F2025-green)
 
 ___
 
@@ -147,12 +147,17 @@ python main.py
 * `LICENSE`: Contém a licença deste projeto.
 * `main.py`: Arquivo principal do projeto DRE.
 * `cenario_teste.json`: Arquivo que descreve um problema teste.
+`cenario_desafiador.json`: Arquivo que descreve um problema teste maior.
 * `conda-environment.bash`: Gerar arquivos [conda-...] para ambientes diferentes.
 * `conda-linux-64.txt`: Arquivo conda para ambiente linux.
 * `conda-lock.yml`: Arquivo do conda-lock.
 * `conda-osx-64.txt`: Arquivo conda para ambiente MAC.
 * `conda-win-64.txt`: Arquivo conda para ambiente Windows.
 * `environment.yml`: Gerência das libs utilizadas no Anaconda.
+* `datacenter_model.py`: Define os objetos do datacenter.
+* `genetic_algorithm.py`: Deine fitness, mutação, crossover etc.
+* `historico.txt`: História e experimentos.
+* `visualization.py`: A funções para montar o dashborad.
 
 ## Autor
 ___
