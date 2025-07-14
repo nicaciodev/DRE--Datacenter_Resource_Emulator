@@ -1,5 +1,5 @@
 ## DRE - Datacenter Resource Emulator
-![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.2-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-09%2F07%2F2025-green)
+![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.3-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-14%2F07%2F2025-green)
 
 ___
 
@@ -147,7 +147,9 @@ python main.py
 * `LICENSE`: Contém a licença deste projeto.
 * `main.py`: Arquivo principal do projeto DRE.
 * `cenario_teste.json`: Arquivo que descreve um problema teste.
-`cenario_desafiador.json`: Arquivo que descreve um problema teste maior.
+* `cenario_desafiador.json`: Arquivo que descreve um problema teste maior.
+* `ExportList--servidores.csv`: Cenário real vmware - servidores.
+* `ExportList--VMs.csv`: Cenário real vmware - VMs.
 * `conda-environment.bash`: Gerar arquivos [conda-...] para ambientes diferentes.
 * `conda-linux-64.txt`: Arquivo conda para ambiente linux.
 * `conda-lock.yml`: Arquivo do conda-lock.

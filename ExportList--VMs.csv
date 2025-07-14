@@ -1,0 +1,731 @@
+﻿Name,Memory Size,CPUs
+Sec_01-PROD-01 - SICCA - CentOS 7 x64,4 GB,2
+Sec_01-PROD-02 - GLPI - Centos 7 x64,4 GB,1
+Sec_01-PROD-03 - Web Producao - Debian 10 x64,12 GB,4
+Sec_01-PROD-04 - Banco de Dados - Debian 10 x64,16 GB,8
+Sec_01-PROD-05 - Web Homologacao - Debian 10 x64,2 GB,1
+Sec_01-PROD-06 - App Serv - OracleLinux 8 x64,8 GB,4
+Sec_01-PROD-07 - DB Serv - OracleLinux 8 x64,4 GB,2
+Sec_01-PROD-08 - Load Balance - OracleLinux 8 x64,4 GB,2
+Sec_01-PROD-09 - App Prod - OracleLinux 8 x64,12 GB,4
+Sec_01-PROD-11 - Samba - Debian 12,4 GB,2
+Sec_02-HML-01 - Treinamento - Windows 2003 32 Bits,3 GB,4
+Sec_02-PROD-01 - ALCompras II - Windows 2003 32 Bits,3 GB,2
+Sec_02-PROD-03 - Database - Oracle Linux 6.3 64 Bits,8 GB,8
+Sec_03-DEV-01 - XVIA-DEV-CENTRAL,4 GB,2
+Sec_03-DEV-02 - XVIA-DEV-CA,4 GB,2
+Sec_03-DEV-03 - XVIA-DEV-SS-GERENCIA,4 GB,2
+Sec_03-DEV-04 - REDIS-DEV,4 GB,2
+Sec_03-DEV-05 - XVIA-DEV-SS-ITEC,4 GB,2
+Sec_03-DEV-06 - XVIA-DEV-SS-SEPLAG,4 GB,2
+Sec_03-DEV-07 - XVIA-DEV-SQL - Windows Server 2012 x64 Bits,15 GB,4
+Sec_03-DEV-08 - XVIA-DEV-POSTGRESQL,16 GB,2
+Sec_03-DEV-09 - XVIA-DEV-SS-SESAU,4 GB,2
+Sec_03-DEV-10 - XVIA-DEV-SS-SEDUC,4 GB,2
+Sec_03-K8S-01 - CP 1,8 GB,4
+Sec_03-K8S-02 - WORKER 01,12 GB,4
+Sec_03-K8S-03 - WORKER 02,12 GB,4
+Sec_03-K8S-04 - Docker,8 GB,2
+Sec_04-PROD-03 - Bacula - Debian11 x64,4 GB,2
+Sec_04-PROD-05 - Monitoramento - Debian 11 x64,4 GB,2
+Sec_04-PROD-06 - App Web - Ubuntu 22.04 LTS,4 GB,2
+Sec_04-PROD-07 - Ominichannel - Debian 12,8 GB,4
+Sec_05-PROD-01 - SIGA - Ubuntu 16.04 LTS,4 GB,4
+Sec_05-PROD-02 - MySQL - Debian 12,4 GB,2
+Sec_06-PROD-02 - Commvalt Server - Windows 2012,32 GB,8
+Sec_07-PROD-01 - FGTS  Firebird 2.5 - Windows Server 2003 32 Bits,4 GB,3
+Sec_08-HML-01 - Banco Oracle 11g - Oracle Linux 7.1 x64,8 GB,2
+Sec_08-HML-02 - Worker Node 2 - Debian 11,2 GB,2
+Sec_08-HML-03 - Apps Novo - Ubuntu 18 LTS,8 GB,2
+Sec_08-PROD-01 - UranoApp - Debian11 x64,8 GB,2
+Sec_08-PROD-03 - Web Service - Ubuntu 16.04 x64,4 GB,2
+Sec_08-PROD-04 - Cluster Docker - Debian 11 x64,8 GB,2
+Sec_08-PROD-05 - RockerChat - Debian 12,16 GB,6
+Sec_08-PROD-06 AD - Windows Server 2012 Standart R1,6 GB,4
+Sec_08-PROD-07 - Banco Oracle 11g - Oracle Linux 7.1 x64,8 GB,2
+Sec_08-PROD-08 - Gestao Estrategica - Debian 10 x64,4 GB,2
+Sec_08-PROD-09 - Cluster Docker - Debian 11,4 GB,2
+Sec_08-PROD-10 - PostgreSQL - Debian 12 x64,8 GB,2
+Sec_09-HML-01 - ESIG - CentOS 7,6 GB,4
+Sec_09-HML-02 - OCR - Windows 2012,8 GB,4
+Sec_09-PROD-03 - Banco de Dados 01 - PostgreSQL - CentOS 7 x64,6 GB,4
+Sec_09-PROD-04 - Banco de Dados 02 - PostgreSQL - CentOS 7 x64,6 GB,4
+Sec_09-PROD-06 - Servidor de Aplicação 02 - CentOS 7 x64,4 GB,4
+Sec_09-PROD-07 - Servidor de Aplicação 01 - CentOS 7 x64,4 GB,4
+Sec_09-PROD-08 - Balanceador - CentOS 7 x64,2 GB,4
+Sec_09-PROD-09 - Nginx - Debian x64,8 GB,8
+Sec_09-PROD-10 - Impresa Oficial - Debian 9.4 x64,4 GB,2
+Sec_10-PROD-01 - Controle de Dados - Ubuntu-14.04.2 x64,8 GB,4
+Sec_10-PROD-02 - Despesa Pública - CentOS 6.8 x64,4 GB,4
+Sec_10-PROD-03 - Banco de Denuncias - Ubuntu 14.04 LTS x64,1 GB,1
+Sec_10-PROD-05 - Intranet - Debian 9 x64,4 GB,4
+Sec_10-PROD-06 - DB PostgreSQL 14,4 GB,2
+Sec_10-PROD-07 - RocketChat,8 GB,4
+Sec_10-PROD-08 - Painel de Gestão - Ubuntu 22.04 LTS x64,8 GB,2
+Sec_11-HML-04 - Backup - Slackware 13.37,2 GB,2
+Sec_11-HML-05 - Vistoria DES - Ubuntu 10.04 LTS x64,4 GB,2
+Sec_11-HML-08 - Servidor de Aplicacao - Ubuntu 12.04 Server x64,2 GB,1
+Sec_11-HML-11 - Portal de Servicos - Django - Debian 8.4 x64,4 GB,4
+Sec_11-HML-12 - Portal de Servicos - PostgreSQL 9.4 - Debian 8.4 x64,8 GB,2
+Sec_11-HML-13- E-talonario 01 - Debian 8.4 x64,4 GB,4
+Sec_11-HML-14 - E-talonario 02 - Debian 8.4 x64,2 GB,2
+Sec_11-HML-15 - E-talonario 03 - Debian 8.4 x64,2 GB,2
+Sec_11-HML-16 - E-talonario 04 - Debian 8.4 x64,2 GB,2
+Sec_11-PROD-03 - CentOS - Safenet 1 - Sec_11,3 GB,2
+Sec_11-PROD-04 - FTP - CentOS 5.3 x32,1 GB,2
+Sec_11-PROD-05 - GCOMICOM - CentOS x5.3 x32,1 GB,2
+Sec_11-PROD-10 - APPLINX - RedHat 5.5 x32,2 GB,2
+Sec_11-PROD-11 - NITGEN Bi - Windows 2003 32 Bits,3 GB,2
+Sec_11-PROD-14 - QWARE - Windows XP,2 GB,1
+Sec_11-PROD-15 - Servidor VPN - PFSense,2 GB,2
+Sec_11-PROD-16 - Vistoria PROD - Ubuntu 10.04 LTS x32,4 GB,2
+Sec_11-PROD-19 - Ubuntu 12.04 DKT 32 Bits - GCOMICOM2 - Sec_11 - 10.50.10.60,4 GB,1
+Sec_11-PROD-20 - Arquivos 01 - Windows 2008 R2 STD,3 GB,2
+Sec_11-PROD-22 - Arquivos 02 - Windows 2008 R2 STD,3 GB,2
+Sec_11-PROD-28 - Comunicação base do SNG - CentOS 7 x32,4 GB,2
+Sec_11-PROD-29 - Ubuntu 12.04 Server 64 Bits - Servidor de aplicação,4 GB,1
+Sec_11-PROD-30 - WEBPRD02 - Ubuntu 14.04 64 Bits,4 GB,2
+Sec_11-PROD-31 - WEBSERVICES - Ubuntu 14.04 64Bits,12 GB,8
+Sec_11-PROD-32 - Servidor Apache - Ubuntu 14.10 Server 64 bits,4 GB,4
+Sec_11-PROD-33 - Servidor de Aplicação - Ubuntu 14.04 Server 64 bits,4 GB,2
+Sec_11-PROD-34 - Dominio - Windows 2012 x64 Bits,2 GB,2
+Sec_11-PROD-35 - Zabbix Proxy - Debian 8 x64,6 GB,4
+Sec_11-PROD-36 - Zabbix Proxy - Debian 9 x64,4 GB,2
+Sec_11-PROD-37 - Servidor de Aplicacao - Debian 8.2 32 Bits,4 GB,2
+Sec_11-PROD-38 - Certificação Digital - Debian 8.4 64 Bits,8 GB,4
+Sec_11-PROD-39 - Servidor de Aplicação - Debian 8.1 x64,4 GB,4
+Sec_11-PROD-40 - Intranet - Portal de Serviços - Debian 8.4 x64,4 GB,4
+Sec_11-PROD-41 - Site - Portal de Serviços - Debian 8.4 x64,4 GB,6
+Sec_11-PROD-42 - PostgreSQL9.4 - Portal de Serviços - Debian8.4 x64,8 GB,2
+Sec_11-PROD-43 - Q-Ware - Windows 2012 R2 STD,4 GB,2
+Sec_11-PROD-44 - Balanceamento 01 - Debian 8.4 x64,4 GB,8
+Sec_11-PROD-45 - Balanceamento 02 - Debian 8.4 x64,4 GB,8
+Sec_11-PROD-46 - API - Debian 8.4 x64,4 GB,4
+Sec_11-PROD-47 - CONTRATOS - Debian 8.4 x64,4 GB,4
+Sec_11-PROD-48 - Portal de Servicos - Django - Debian 8.4 x64,4 GB,2
+Sec_11-PROD-49 - Servidor de Impressao - Debian 8.4 x64,4 GB,2
+Sec_11-PROD-50 - Relatorios e Guias - Portal de Servicos - Debian 8.4 x64,4 GB,4
+Sec_11-PROD-51 - Balanceamento de Carga - Debian 8.4 x64,4 GB,4
+Sec_11-PROD-52 - Servidor Jboss - Debian 8.4 x64,16 GB,4
+Sec_11-PROD-53 - BD Etalonario - Debian 8.4 x64,8 GB,4
+Sec_11-PROD-54 - JBOSS - Debian 8.4 x64,16 GB,4
+Sec_11-PROD-57 - Servidor de Aplicação - Debian 8.1 x64,4 GB,4
+Sec_11-PROD-59 - DPVAT Windows Server 2016 x64,4 GB,2
+Sec_11-PROD-60 - Eclinicas FrontEnd - Debian 8.4 x64,4 GB,2
+Sec_11-PROD-61 - EMVIA - Windows Server 2016 x64 STD,4 GB,2
+Sec_11-PROD-62 - Relatórios e Guias - Debian 8.4 x64,4 GB,4
+Sec_11-PROD-63 - Balanceamento 03 - Debian 8.4 x64,4 GB,8
+Sec_11-PROD-64 - API - Debian 8.4 x64,4 GB,4
+Sec_11-PROD-65 - Balanceamento - Debian 10.1 x64,4 GB,4
+Sec_11-PROD-66 - SRV10AP02 Envia - Windows 2008 R2 x64,4 GB,4
+Sec_11-PROD-67 - SUSPENSAO-01  Debian 8 x64,2 GB,2
+Sec_11-PROD-68 - Zabbix Proxy - CentOS 8,4 GB,2
+Sec_11-PROD-69 - Backup Corporativo - CentOS 8,4 GB,4
+Sec_11-PROD-70 -  Servidor Aplicacao - CentOS 8,8 GB,4
+Sec_11-PROD-71 - Relatórios e Guias,4 GB,4
+Sec_11-PROD-72 - VPN - FW - pfSense,2 GB,2
+Sec_11-PROD-73 - Wordpress,4 GB,4
+Sec_11-PROD-74 - Balanceamento 01,4 GB,8
+Sec_11-PROD-79 - Wordpress - Debian 11,4 GB,4
+Sec_11-PROD-80 - Servidor de Aplicacao - Debian 11,4 GB,4
+Sec_11-PROD-81 -Postgresql - Debian 11,4 GB,4
+Sec_11-PROD-82 - WEB-INTRANET - Debian11,4 GB,4
+Sec_11-PROD-83 - API - Debian11,4 GB,4
+Sec_11-PROD-84 - Wordpress - Debian11 x64,4 GB,2
+Sec_11-PROD-85 - Wordpress II - Debian 11 x64,4 GB,2
+Sec_11-PROD-86 - FTPs Server - Debian 12 X64,4 GB,2
+Sec_11-PROD-87 - Servidor Aplicação - Debian 12 x64,4 GB,4
+Sec_11-PROD-88 - API - Debian 8.4 x64,4 GB,4
+Sec_12-PROD-01 - SIIG - Windows 2003 32bits,2 GB,2
+Sec_12-PROD-02 - PgSQL - Debian 6 32 Bits,2 GB,2
+Sec_12-PROD-04 - SigePro - Debian 7 x64,8 GB,8
+Sec_12-PROD-05 - Content Manager BD - CentOS 7.0,6 GB,2
+Sec_12-PROD-06 - Content Manager APP - Debian 7.8 x64,6 GB,2
+Sec_12-PROD-07 - Moodle - Debian 7 x64,3 GB,4
+Sec_12-PROD-08 - Moodle App - Debian 7.8 x64,4 GB,4
+Sec_12-PROD-09 - Moodle - Debian 12,4 GB,4
+Sec_12-PROD-10 - GLPI - Ubuntu 22.04 LTS,4 GB,2
+Sec_12-PROD-11 - Intranet - Debian 8.4 x64,4 GB,2
+Sec_12-PROD-12 - Matricula 2019 - Ubuntu 22.04 LTS,4 GB,4
+Sec_12-PROD-14 - Escola 10 - Apache e MySQL - Ubuntu 22.04 LTS,4 GB,4
+Sec_12-PROD-15 - Apache Hadoop - Ubuntu 22.04.2 Linux LTS,23 GB,12
+Sec_12-PROD-16 - SigePro2 - Ubuntu 22.04 LTS,4 GB,4
+Sec_12-PROD-17 - Aplicação Web - Ubuntu 22.04,8 GB,4
+Sec_12-PROD-19 - Moodle App - Debian 11,4 GB,2
+Sec_12-PROD-20 - Banco MySQL 8 - Oracle Linux 8,8 GB,2
+Sec_12-PROD-21 - Moodle App - Debian 11,4 GB,2
+Sec_12-PROD-22 - Escola Web - Debian 11,4 GB,2
+Sec_12-PROD-23 - Escola 10 - Debian 12 X64,4 GB,2
+Sec_12-PROD-24 - BD Escola 10 - Ubuntu 22.04 LTS,4 GB,4
+Sec_12-PROD-25 - Vem Que dá Tempo - Apache-MySQL - Ubuntu 22.04 LTS,4 GB,4
+Sec_12-PROD-26 - WebServer - Ubuntu 24.04 LTS,7 GB,6
+Sec_13-PROD-01 - BI - MySQL 5.7 - CentOs 7 x64,16 GB,4
+Sec_13-PROD-02 - APP-DESENV - CentOS 7x64,20 GB,2
+Sec_13-PROD-03 - APP-INTEGRACAO - CentOS 7x64,16 GB,2
+Sec_13-PROD-04 - APP-FTP - CentOS 7 x64,2 GB,2
+Sec_13-PROD-05 - APP-PRODUCAO - CentOS 7 x64,28 GB,2
+Sec_13-PROD-06 - NGINX - CentOS 7 x64,4 GB,2
+Sec_14-PROD-01 - PostgreSQL - Debian6 32 Bits,2 GB,2
+Sec_14-PROD-02 - PostgreSQL - Debian 6.0.1 32,2 GB,2
+Sec_14-PROD-03 - LDAP- Debian 6.0.1 32,4 GB,4
+Sec_14-PROD-06 - Apache Novo - Debian 7 x64,8 GB,4
+Sec_15-PROD-01 - NS3 - Ubuntu 20.04 LTS x64,8 GB,4
+Sec_15-PROD-02 - NS4 - Ubuntu 20.04 LTS x64,8 GB,4
+Sec_16-HML-01 - Web03 - Windows 2008,12 GB,4
+Sec_16-PROD-03 - PDC - Windows 2008,12 GB,4
+Sec_16-PROD-10 - Windows 2012 STD,16 GB,4
+Sec_16-PROD-12-WEB01-WINDOWS 2012 R2 x64,32 GB,8
+Sec_16-PROD-13-WEB02-WINDOWS 2012 R2 x64,8 GB,4
+Sec_16-PROD-14-DB02-WINDOWS 2012 R2 x64,12 GB,4
+Sec_16-PROD-15-WEB03-WINDOWS 2012 R2 x64,12 GB,4
+Sec_16-PROD-16-WEB04-WINDOWS 2012 R2 x64,8 GB,4
+Sec_16-PROD-17 - Web - Windows Server 2022 x64,12 GB,4
+Sec_16-PROD-18 - Web - Windows Server 2022 x64,32 GB,4
+Sec_17-HML-01 - Oracle Linux 8 - MySQL 8,8 GB,2
+Sec_17-HML-02 - App 10 - Debian 11,12 GB,6
+Sec_18-PROD-01 - WebServer - Debian 6 x32,2 GB,2
+Sec_19-PROD-01 - IMA CAR - Windows 2008 R2 STD - Origem,4 GB,4
+Sec_19-PROD-02 -BOLETOS  - Ubuntu 14.04 LTS x64,4 GB,2
+Sec_19-PROD-03 - BOLETOS - Ubuntu 14.04 x64,4 GB,2
+Sec_20-PROD-01 - Windows 2003 32 Bits Standard - Integra Apache I - SEGESP,2 GB,4
+Sec_20-PROD-02 - Windows 2003 32 Bits Standard - Integra Apache II - SEGESP,2 GB,4
+Sec_20-PROD-03 - Windows 2008 R2 64 - AD-INTEGRA - SEGESP,2 GB,2
+Sec_20-PROD-04 - Windows 2008 R2 64 - APPEXT - SEGESP,8 GB,8
+Sec_20-PROD-07 - Windows 2008 R2 64 - PORTAL01 - SEGESP,16 GB,8
+Sec_20-PROD-08 - Windows 2008 R2 64 - PORTAL02 - SEGESP,16 GB,8
+Sec_20-PROD-09 - Windows 2008 R2 64 - PROCESSO01 - SEGESP,16 GB,8
+Sec_20-PROD-10 - Windows 2008 R2 64 - PROCESSO02 - SEGESP,16 GB,8
+Sec_20-PROD-11 - Windows 2008 R2 64 - RELRH - SEGESP,8 GB,8
+Sec_20-PROD-12 - Windows 2008 R2 64 - RH01 - SEGESP,8 GB,8
+Sec_20-PROD-13 - Windows 2008 R2 64 - RH02 - SEGESP,8 GB,8
+Sec_20-PROD-19 - BD01 - Windows 2008 R2 64,32 GB,12
+Sec_21-HML-02 - HOMOLOGA BD - Debian 8.1 x64,8 GB,2
+Sec_21-PROD-01 - Windows 2008 R2 STD x64,8 GB,2
+Sec_21-PROD-02 - Windows 2008 R2 STD 64,12 GB,2
+Sec_21-PROD-04 - Aplicação - Debian 8.1 x64,8 GB,2
+Sec_21-PROD-05 - Banco de Dados - Debian 8.1 x64,8 GB,2
+Sec_21-PROD-06 - WebSrvMySQLPHP - Debian 9.4 x64,6 GB,2
+Sec_21-PROD-07 - Pentaho - Windows Server 2008 x64,4 GB,2
+Sec_21-PROD-08 - Licenças - Windows Server 2022 x64,4 GB,2
+Sec_22-ACRONIS-01 - CS1,16 GB,2
+Sec_22-ACRONIS-02 - CS1,16 GB,2
+Sec_22-ACRONIS-03 - CS2,12 GB,2
+Sec_22-ACRONIS-04 - GER,16 GB,2
+Sec_22-HML-03 - VOIP,8 GB,2
+Sec_22-HML-04 - Alagoas na palma da mão,4 GB,1
+Sec_22-HML-07 - Testes SvnDTI - Slackware 12.1 32 Bits - Origem,4 GB,2
+Sec_22-HML-08 - MIT - Debian11 x64,4 GB,1
+Sec_22-HML-10 - SICC e Frotas - Slackware 13.1 64,4 GB,2
+Sec_22-HML-11 - HML Sistemas - PostgreSQL - Debian 7 64 Bits,6 GB,2
+Sec_22-HML-15 - AD - Windows 2008 R,4 GB,4
+Sec_22-HML-16 - SUAP - NGINX - Debian 11 x64,4 GB,2
+Sec_22-HML-17 - PostgreSQL - Debian 7 x64,8 GB,4
+Sec_22-HML-18 - SIMBA 2018 - Windows 2012 STD,8 GB,2
+Sec_22-HML-19 - SIMBA 2018 - Windows 2012 STD,8 GB,2
+Sec_22-HML-20 - VOIPMONITOR - Debian11 x64,8 GB,2
+Sec_22-HML-21 - Kuma-Monitor - Debian 11 x64,4 GB,4
+Sec_22-HML-31 - Django 1.8 - Debian 8.1 64 Bits,4 GB,2
+Sec_22-HML-33- WebServer HML-DES-SEFAZ - Debian 8.1 x64,3 GB,4
+Sec_22-HML-45 - Transparencia HML - Oracle Linux 6.3 64 Bits,12 GB,8
+Sec_22-HML-46 - Acolhe Alagoas Dev - Ubuntu 14.04 x64,4 GB,2
+Sec_22-HML-57 - Dados Pericia - Windows Server 2012 x64  - SQL Server 2012,8 GB,2
+Sec_22-HML-58 - Django III - Slackware 13.1 64 Bits,6 GB,4
+Sec_22-HML-59 - Graylog ElasticSearch - Debian 11,4 GB,2
+Sec_22-HML-60 - DB Postgres 12,8 GB,1
+Sec_22-HML-61 - Joomla - Debian11 - x86,4 GB,1
+Sec_22-HML-62 - Netbox - Ubuntu 22.04 x64,4 GB,2
+Sec_22-HML-63 - Zabbix para testes de integração - x64,4 GB,1
+Sec_22-HML-66 - SGP - Debian 12 x64,4 GB,1
+Sec_22-HML-67 - OpenProject - Debian 12 x64,4 GB,2
+Sec_22-HML-68 - WebServer2 - Debian 11.1 x64,16 GB,2
+Sec_22-HML-69 - SISTEMAS - Debian 11,32 GB,6
+Sec_22-HML-70 - Oracle Linux 8 -  ETL/Restore,20 GB,4
+Sec_22-HML-71 - Postgresql - Debian 12 x64,8 GB,2
+Sec_22-HML-72- DNS - DEBIAN 12 x64,6 GB,4
+Sec_22-PROD-03 - WSUS - Windows 2012 STD x64,24 GB,4
+Sec_22-PROD-04 - Arquivos - Windows 2008 R2 STD,6 GB,4
+Sec_22-PROD-05 - AD - Windows Server 2022,10 GB,4
+Sec_22-PROD-06 - AD Replica - Windows Server 2022,8 GB,2
+Sec_22-PROD-08 - BITPUBLICO - Debian 10.9 x64,1 GB,1
+Sec_22-PROD-09 - SERVIDOR PROXY NGINX - Debian 10 x64,8 GB,2
+Sec_22-PROD-101 - App GGE - Debian 8.1 x64,3 GB,2
+Sec_22-PROD-105 - Aplicação WEB - Debian11 x64,6 GB,1
+Sec_22-PROD-108 - Ger. Ubiquiti - Debian 8 x64,6 GB,4
+Sec_22-PROD-11 - SIGED - Windows 2003 Ent,2 GB,2
+Sec_22-PROD-110 - SonarQube Prometheus e Grafana - Debian GNU/Linux 11,20 GB,8
+Sec_22-PROD-111 - Gitlab Unificação - Debian GNU/Linux 11,8 GB,4
+Sec_22-PROD-114 - Hospedagem Agencia Alagoas - Debian 8.1 64 Bits,6 GB,4
+Sec_22-PROD-115 - Hospedagem Agencia Alagoas - MySQL 5.6 Debian 7.8 64 Bits,6 GB,4
+Sec_22-PROD-117 - Debian 8.1 x64 - Webserver Intranets Gov,3 GB,4
+Sec_22-PROD-118 - NGINX + Django 1.8 - DMZ - Debian 8.1 x64,4 GB,4
+Sec_22-PROD-119 - NGINX + Django 1.8 - CORP - Debian 8.1 x64,4 GB,4
+Sec_22-PROD-12 - ProdIMAGE VIEW - NGED - Windows 2003 STD 32 Bits,2 GB,2
+Sec_22-PROD-122 - BI SIAFEM - TRANSPARENCIA - Oracle Linux 6.3 64 Bits,24 GB,12
+Sec_22-PROD-126 - WebServer Joomla - Debian 8.1 x64,6 GB,4
+Sec_22-PROD-127 - Web Server Joomola - MySQL 5.6  - Debian 8.1 x64,16 GB,4
+Sec_22-PROD-134 - Controle DC Terminus - Debian 8.4 x64,2 GB,2
+Sec_22-PROD-135 - Oracle Cloud Control 13c - Oracle Linux 7.3 x64,12 GB,8
+Sec_22-PROD-138 - DNS - Debian 11 x64,4 GB,2
+Sec_22-PROD-150 - VMware Vcenter 6.5  CLONE,24 GB,8
+Sec_22-PROD-157 - NGINX + Django 1.8 - Debian 8.1 64 Bits,4 GB,2
+Sec_22-PROD-158 - Open VPN - PfSense 64 Bits,4 GB,4
+Sec_22-PROD-159 - Kuma e Monast - Debian12 x64,8 GB,6
+Sec_22-PROD-162 - PostgreSQL 9.6 SICAP - Debian 8.4 x64,10 GB,2
+Sec_22-PROD-163 - Tomcat iReport - Debian 8.4 x64,4 GB,2
+Sec_22-PROD-180 - Joomla WebServer SSL PHP7,16 GB,4
+Sec_22-PROD-181 - Joomla WebServer - MySQL 5.7,8 GB,2
+Sec_22-PROD-186 - Novo Site Governamental - BD PostgreSQL - Debian 9.4 x64,6 GB,1
+Sec_22-PROD-187 - Novo OwnCloud - Debian 9.9 x64,8 GB,4
+Sec_22-PROD-19 - Sistemas PHP - Slacware 12.1 32 Bits,3.05 GB,4
+Sec_22-PROD-192 - Django CGE - Debian 9.9,4 GB,2
+Sec_22-PROD-194 - Pericia Medica - Debian11 x64,4 GB,2
+Sec_22-PROD-195 - Open VPN,8 GB,4
+Sec_22-PROD-196 - PDI/Apache Hop - Oracle Linux 8,20 GB,2
+Sec_22-PROD-203 - Oracle Database 12c - Sistema de Ponto,8 GB,2
+Sec_22-PROD-208 - PostgreSQL - CentOS 8,16 GB,2
+Sec_22-PROD-21 - Pgsql Webserver - Debian 6 32 Bits,3 GB,2
+Sec_22-PROD-212- Gestao Santana do Ipanema - Debia 10 x64,4 GB,2
+Sec_22-PROD-213 - SNEP 3 - Debian 8x64,16 GB,4
+Sec_22-PROD-214 - GAESF Oracle Database 19c - Oracle Linux 8,16 GB,2
+Sec_22-PROD-217- InDesign - Windows 2012 x64 STD,8 GB,2
+Sec_22-PROD-219 - Nginx API Rest - Debian 11,4 GB,2
+Sec_22-PROD-22 - MySQL 3Par - Debian 6 64 Bits,3 GB,2
+Sec_22-PROD-221 - FortiManager,16 GB,4
+Sec_22-PROD-222 - SSMC Appliance,32 GB,8
+Sec_22-PROD-223 - NFS BKP BANCOS  - Debian 11,4 GB,2
+Sec_22-PROD-224 - Oracle Linux 8  - Oracle 19c  - Sistemas Gerd,16 GB,4
+Sec_22-PROD-225 - Webserv Chuvas - Debian 11,4 GB,2
+Sec_22-PROD-226 - Django - Debian 11,4 GB,2
+Sec_22-PROD-227 - API Tranparencia - Debian 11,8 GB,2
+Sec_22-PROD-228 - Arquivos Tranparencia - Debian 11,6 GB,2
+Sec_22-PROD-229 - ElastS Servidor - Debian 11,4 GB,2
+Sec_22-PROD-230 - Portal Transparencia - Debian 11,6 GB,4
+Sec_22-PROD-232 - Joomola Webserver2 BD HML- MySQL 8,16 GB,2
+Sec_22-PROD-233 - BD Sec_22 SISTEMAS - SQL Server 2012,8 GB,1
+Sec_22-PROD-234 - Joomla WebServer2 - BD PROD - MySQL 8,16 GB,2
+Sec_22-PROD-235 - Oracle Linux 8  - Oracle 19c  - INRC,16 GB,4
+Sec_22-PROD-241 - Sites Joomal - Debian 11,8 GB,4
+Sec_22-PROD-245 - Terminus - Debian 11,8 GB,4
+Sec_22-PROD-246 - BD Terminus - Debian 11,8 GB,4
+Sec_22-PROD-248 - Websites2 - Debian 12 X64,8 GB,2
+Sec_22-PROD-249 - Ficha Funcional - Debian 12 x64,8 GB,2
+Sec_22-PROD-250 - Guia Sec_22 - Debian 11,4 GB,1
+Sec_22-PROD-26 -  WebServer III Apache PHP - Slacware 13.37 64 Bits,4 GB,4
+Sec_22-PROD-260 - FortiWeb,16 GB,4
+Sec_22-PROD-261 - Servidor Web Sites,8 GB,2
+Sec_22-PROD-262 - DNS - Debian 12 x64,3 GB,2
+Sec_22-PROD-263 - DNS - Debian 11 x64,4 GB,4
+Sec_22-PROD-264 - RocketChat - Debian 12 x64,4 GB,2
+Sec_22-PROD-265 - CI/CD - Debian 12 x64,4 GB,2
+Sec_22-PROD-266 - Sistemas - Debian 12 x64,4 GB,2
+Sec_22-PROD-268 - FortiAuthenticator,8 GB,4
+Sec_22-PROD-269 - FortiAnalyzer,16 GB,4
+Sec_22-PROD-27 - WebServer II BDAdmin - Slacware 13.37 64 Bits,4 GB,2
+Sec_22-PROD-270 - WebServer - SECOM - Debian 9x64,8 GB,2
+Sec_22-PROD-271 - Laudos IML - Debian11 x64,4 GB,2
+Sec_22-PROD-272 - Joomla v5 - Debian 12 x64,8 GB,2
+Sec_22-PROD-273 - NFS - FortiSIEM - Debian 12,8 GB,8
+Sec_22-PROD-274 - Servidor Voip Sec_11 - SNG7-PBX-64bit,12 GB,8
+Sec_22-PROD-275 - Supervisor - FortiSIEM,24 GB,12
+Sec_22-PROD-276 - Worker01 - FortiSIEM,16 GB,8
+Sec_22-PROD-277 - Worker02 - FortiSIEM,16 GB,8
+Sec_22-PROD-278 - Collector01 - FortiSIEM,8 GB,4
+Sec_22-PROD-279 - Collector02 - FortiSIEM,8 GB,4
+Sec_22-PROD-28 - WebServer II Apache PHP - Slacware 13.37 64 Bits,8 GB,4
+Sec_22-PROD-280 - Sistema de Acesso - Windows Server 2022,8 GB,2
+Sec_22-PROD-281 - Arquivos - Windows Server 2022,8 GB,4
+Sec_22-PROD-282 - Sistemas CGE - Debian 12,16 GB,2
+Sec_22-PROD-283 - VOIP - SNG PABX,8 GB,8
+Sec_22-PROD-284 - FreePBX - Debian 12,12 GB,8
+Sec_22-PROD-285 - Elasticsearch 01 - Debian 12,8 GB,4
+Sec_22-PROD-286 - Elasticsearch 02- Debian 12,8 GB,4
+Sec_22-PROD-287 - MogoDB + Graylog 01 - Debian 12,8 GB,4
+Sec_22-PROD-288 - MogoDB + Graylog 02 - Debian 12,8 GB,4
+Sec_22-PROD-289 - MogoDB + Graylog 03 - Debian 12,8 GB,4
+"Sec_22-PROD-29 - WebServer DIOP - Slacware 13,37 64 Bits",1 GB,1
+Sec_22-PROD-290 - Capacitacao - Debian 12,6 GB,2
+Sec_22-PROD-291 - Pentest - Kali Linux 2024.3,4 GB,2
+Sec_22-PROD-292 - CRM - GLPI - Debian 12,8 GB,8
+Sec_22-PROD-293 - FreePBX - Debian 12 x64,8 GB,8
+Sec_22-PROD-295 - HPE 3PAR 7400 VSP,4 GB,4
+Sec_22-PROD-296 - HPE 3PAR 8200 VSP,4 GB,4
+Sec_22-PROD-298 - GitLab - Ubuntu 24.04,8 GB,2
+Sec_22-PROD-299 - II Servidor Web Sites - Debian 12-64bit,8 GB,2
+Sec_22-PROD-30 -  WebServer II PgSQL - Debian 6 32 Bits,2 GB,2
+Sec_22-PROD-300 - Postgresql - Oracle Linux 8,16 GB,1
+Sec_22-PROD-301 - HPE 3PAR 4 VSP,4 GB,4
+Sec_22-PROD-302 - Scripts Automação - Windows Server 2022,8 GB,4
+Sec_22-PROD-303 - Monitoramento Voip - Debian 12,8 GB,6
+Sec_22-PROD-304 - Integracao IA - PfSense 2.7.2,4 GB,2
+Sec_22-PROD-305 - SSO Keycloak - Debian 12,16 GB,2
+Sec_22-PROD-306 - WebServer - Debian 12 x64,1 GB,2
+Sec_22-PROD-31 - WebServer II MySQL - Debian 6 32 Bits,2 GB,2
+Sec_22-PROD-32 - SICAP Antigo Siapnet  - Slackware 64 Bits,8 GB,4
+Sec_22-PROD-33 - OCS Inventory - Debian 11 x64,2 GB,2
+Sec_22-PROD-34 - Django II - Slackware 13.1 64 Bits,6 GB,4
+Sec_22-PROD-35 - Django PgSQL - Slackware 13.1 32 Bits,2 GB,2
+Sec_22-PROD-42 - SIPANET PostgreSQL - Slackware 12.1 32 Bits,3 GB,4
+Sec_22-PROD-43 - MinIO S3 - Debian 11 x64,16 GB,8
+Sec_22-PROD-47 - PostgreSQL  - Debian 7 64 Bits,10 GB,4
+Sec_22-PROD-48 - PostgreSQL Standby - Debian 7 64 Bits,6 GB,2
+Sec_22-PROD-54 - AD SQL Server 2012  - Windows 2008 R2 STD,4 GB,4
+Sec_22-PROD-56 - Django IV - Debian 7 64 Bits,6 GB,4
+Sec_22-PROD-57 - Pontual4 Acesso - Windows 2008 R2 STD,3 GB,2
+Sec_22-PROD-58 - PostgreSQL- Debian 7 x64,8 GB,4
+Sec_22-PROD-59 - GITLAB - Debian 9 x64,8 GB,2
+Sec_22-PROD-61 - Pentaho Business Analitics - Debian 7 x64,6 GB,4
+Sec_22-PROD-64 -  SQL Server 2012 - Windows Server 2012 x64 Bits,8 GB,4
+Sec_22-PROD-65 - Pentaho Business Analitics - Debian 7 x64,6 GB,4
+Sec_22-PROD-66 - Dataprotector - Windows 2012 x64,12 GB,4
+Sec_22-PROD-81 - DataProtector GRE - CentOS 6.5 64bits,6 GB,4
+Sec_22-PROD-82 - GEPLANES - Debian 7 x64,2 GB,4
+Sec_22-PROD-84 - DataProtector GRE Linux - Red Hat Enterprise 6.4 x64,6 GB,4
+Sec_22-PROD-85 - Django - Debian 7.8 x64,2 GB,2
+Sec_22-PROD-86 - DNS Master - FreeBsd 11 x64,4 GB,1
+Sec_22-PROD-88 - DNS Slave - FreeBSD 11 x64,4 GB,1
+Sec_22-PROD-89 - Sistema de Patrimonio - Debian 7.8 64x,6 GB,4
+Sec_22-PROD-90 - NGED - Windows Server 2012 x64 Bits,8 GB,4
+Sec_22-PROD-94 - Backup Server - PfSense,2 GB,4
+Sec_22-PROD-96 - DNS Slave 3 - FreeBSD 11 x64,4 GB,1
+Sec_22-PROD-97 - DNS Slave 4 - FreeBSD 11 x64,4 GB,1
+Sec_22-PROD-99 -  GIT - Debian 7 x64,8 GB,4
+Sec_22-TESTE-30 - RSYNC ACRONIS,8 GB,4
+Sec_22-TESTE-500 - Fonseca - Nao Desligar,4 GB,2
+Sec_22-TESTE-85 - Oracle 12c ASM - Teste de Restore SEI,30 GB,6
+Sec_22-TESTE-89 - Oracle Linux 8 - MySQL 8 - Não desligar,16 GB,2
+Sec_22-TESTE-93 - PostgreSQL  14 - Debian 11,8 GB,2
+Sec_23-PROD-01 - ARQUIVIOS RSINC - CENTOS 7.2 X64,4 GB,2
+Sec_23-PROD-03-PFSENSE X64,8 GB,4
+Sec_23-PROD-04 -  Oracle Linux 5.9 x64 - Oracle 10g,12 GB,4
+Sec_23-PROD-05-INTEGRADOR-DEBIAN 10X64,12 GB,4
+Sec_23-PROD-06 - GLPI - Debian 11,4 GB,2
+Sec_24-HML-01 - ControlPlane 01,8 GB,4
+Sec_24-HML-03 - Worker 01,8 GB,4
+Sec_24-HML-04 - Worker 02,8 GB,4
+Sec_24-HML-05 - Worker 03,8 GB,4
+Sec_24-HML-06 - NFS 01,4 GB,2
+Sec_24-PROD-01 - LoadBalancer,2 GB,1
+Sec_24-PROD-02 - Control Plane 01,8 GB,8
+Sec_24-PROD-03 - Control Plane 02,8 GB,8
+Sec_24-PROD-04 - Control Plane 03,8 GB,8
+Sec_24-PROD-05 - Worker 01,16 GB,8
+Sec_24-PROD-06 - Worker 02,16 GB,8
+Sec_24-PROD-07 - Worker 03,16 GB,8
+Sec_24-PROD-08 - Worker 04,16 GB,8
+Sec_24-PROD-09 - Proxy Web,2 GB,1
+Sec_24-PROD-20 - NFS Backup,8 GB,2
+Sec_24-PROD-21 - MySQL BD,2 GB,1
+Sec_24-PROD-22 - PostgreSQL DB,2 GB,1
+Sec_24-PROD-23 - Docker,8 GB,2
+Sec_24-PROD-24 - Acesso DTIT,12 GB,6
+Sec_24-PROD-25 - NFS Sites,8 GB,2
+Sec_25-PROD-01 - E-Sus - Debian 8.4 x64,8 GB,2
+Sec_26-HML-01 - AD RPL - Windows 2008,4 GB,4
+Sec_26-PROD-01 - AD - Windows 2008 STD,4 GB,4
+Sec_26-PROD-04 - CRIA - Debian 8 x64,4 GB,2
+Sec_26-PROD-05 - AD Replica - Windows 2016 STD x64,8 GB,4
+Sec_27-HML-01-SIMBA CENTOS 8 64x,8 GB,1
+Sec_27-HML-02-SIMBA-DMZ CENTOS 8 64x,8 GB,1
+Sec_27-HML-03-SIMBA - Oracle 19c,20 GB,2
+Sec_27-HML-08 - Corregedoria Policia Judiciaria - Ubuntu 18.04 x64,8 GB,2
+Sec_27-HML-09 - SIMBA - RASB - DMZ,4 GB,2
+Sec_27-HML-10 - SIMBA - GCAST - Intranet,4 GB,2
+Sec_27-HML-11 - NextCloud - Debian 12 x64,4 GB,2
+Sec_27-PROD-01 - Sispol teste - Debian 5 64,2 GB,1
+Sec_27-PROD-03- INTRANET - Debian 6 64 Bits,4 GB,2
+Sec_27-PROD-04 - SISPOL - Debian 6 64 Bits,8 GB,4
+Sec_27-PROD-06 - Relatorio - Windows 2003 STD,4 GB,2
+Sec_27-PROD-12 - Projetos II - Debian 7 64 Bits,2 GB,1
+Sec_27-PROD-17 - WebServer III - Debian 10 x64,6 GB,2
+Sec_27-PROD-18 - HELPDESK - Debian 8.4 x64,4 GB,1
+Sec_27-PROD-21 - WebService - Debian 9 x64,4 GB,4
+Sec_27-PROD-22 - WebService - Debian 9 x64,2 GB,4
+Sec_27-PROD-25 - Corregedoria Policia Judiciaria - Ubuntu 18.04 x64,8 GB,2
+Sec_27-PROD-27 - Corregedoria PCJ Openfire - Ubuntu 18.04,4 GB,1
+Sec_27-PROD-28 - Sistemas internos - Debian 11.1 x64,4 GB,2
+Sec_27-PROD-29 - Genesis - NI - Debian 10.2 x64,4 GB,2
+Sec_27-PROD-30 - WebServer - Debian 12 x64,8 GB,4
+Sec_27-PROD-32 - MANDADO DE PRISAO 2,4 GB,2
+Sec_27-PROD-33 - SISTEMA FROTAS  - Debian 11,4 GB,2
+Sec_27-PROD-34 - scriptcase,4 GB,2
+Sec_27-PROD-35 - PENTAHO BA SERVER,4 GB,4
+Sec_27-PROD-36 - Audiovisual - Debian 11,4 GB,4
+Sec_27-PROD-37 - ONLYOFFICE - Debian 11.3 x64,2 GB,2
+Sec_27-PROD-38 - SIMBA - Banco Oracle 19c - Oracle Linux 8 x64,16 GB,4
+Sec_27-PROD-39 - SIMBA - RASB - DMZ,8 GB,4
+Sec_27-PROD-40 - SIMBA - GCAST - Intranet,5 GB,2
+Sec_27-PROD-41 - Veículos Apreendidos - Debian11 x64,4 GB,4
+Sec_27-PROD-42 - Nextcloud - Debian 11 x64,6 GB,2
+Sec_27-PROD-43 - Gestao - Debian 11,10 GB,10
+Sec_27-PROD-44 - Concentrador de Bases de Dados  - Debian 12 x64,6 GB,6
+Sec_27-PROD-45 - RH e Controle de Armas - Debian 12 x64,6 GB,4
+Sec_27-PROD-46 - OpenMediaVault - Debian 11 x64,12 GB,6
+Sec_27-PROD-47 - NextCloud - Debian 12 x64,8 GB,4
+Sec_27-PROD-48 - NextCloud - Debian 12 x64,4 GB,2
+Sec_27-PROD-49 - WebServer - Debian 12 x64,4 GB,2
+Sec_27-PROD-50 - Sistema de Estatistica - Debian 12,8 GB,6
+Sec_28-HML-01- WebServer - Ubuntu 14.04,4 GB,4
+Sec_28-HML-04 - Oracle Database 11g - Oracle Linux 7.1 X64,16 GB,4
+Sec_28-HML-05 - Aplicação 02 - Windows Server 2012 R2 STD,4 GB,4
+Sec_28-PROD-01- Webserver 01 -  Ubuntu 14.04,4 GB,4
+Sec_28-PROD-02- Webserver 02 -  Ubuntu 14.04,8 GB,4
+Sec_28-PROD-03- Web Connection - Windows Server 2012 x64 STD,4 GB,4
+Sec_28-PROD-04- Apoio SajAt - Windows Server 2012 R2 STD,4 GB,4
+Sec_28-PROD-05- Aplicação 02 - Windows Server 2012 R2 STD,4 GB,4
+Sec_28-PROD-06 - Aplicação 01 - Windows Server 2012 R2 STD,4 GB,4
+Sec_28-PROD-08 - AppWeb - Debian 8.4 x64,4 GB,1
+Sec_28-PROD-14 - Treinamento - Windows Server 2012 R2 STD,4 GB,4
+Sec_28-PROD-15 - Aplicação WEB - Windows Server 2012 x64 STD,8 GB,4
+Sec_28-PROD-16 - AD REPLICA - Windows 2012 STD X64,8 GB,4
+Sec_28-PROD-17 - SAJ Insights - Windows Server 2012 x64 STD,4 GB,4
+Sec_28-PROD-18 - Oracle Database 11g - Oracle Linux  7.5 x64,16 GB,8
+Sec_28-PROD-19 - zabbix proxy,4 GB,2
+Sec_28-PROD-20 - Sistema de ponto Ubuntu x64,9 GB,4
+Sec_29-PROD-01 - Pentaho BI Server - Debian 12,4 GB,2
+Sec_29-PROD-02 - Apache - Debian 8.4 x64,8 GB,8
+Sec_29-PROD-03  - MySQL 5.6 - Ubuntu 14.04 x64,6 GB,4
+Sec_29-PROD-04 - PostgreSQL 9.4 - Debian 8.4 x64,32 GB,8
+Sec_29-PROD-05 - MySQL 5.6 - Debian 8.4 x64,6 GB,4
+Sec_29-PROD-07 - Debian 12 x64,8 GB,4
+Sec_29-PROD-08 - PostgreSQL - Debian 8.4 x64,6 GB,2
+Sec_29-PROD-09 - Servidor Web Inteligencia - Debian 8.4 x64,6 GB,4
+Sec_29-PROD-10 - SAMBA FS - Debian 9.x x64,4 GB,2
+Sec_29-PROD-11 - Log Server FortiAnalyzer,4 GB,2
+Sec_29-PROD-12 - DESENV E HML - Debian 9 x64 -,8 GB,2
+Sec_29-PROD-13 - Video Conferencia - Debian 9 x64,4 GB,4
+Sec_29-PROD-14 - Log Serv - Debian 11,6 GB,2
+Sec_29-PROD-15 - Banco de Dados - Debian,32 GB,8
+Sec_29-PROD-16 - Nextcloud - Debian 12,16 GB,6
+Sec_29-PROD-17 - MySQL - Debian 12 x64,6 GB,4
+Sec_29-PROD-18 - Webservice Emergencia - Debian 12,8 GB,4
+Sec_29-PROD-19 - BD Emergencia - Debian 12,8 GB,4
+Sec_29-PROD-20 - IA - Debian 12,8 GB,8
+Sec_29-PROD-21 - PostgreSQL - Debian 12,32 GB,8
+Sec_30-PROD-01 - WebServices - Ubuntu 14.04 x64,4 GB,4
+Sec_31-PROD-01 - FTP - Debian 11,4 GB,2
+Sec_31-PROD-02 - GLPI - Debian 12 x64,4 GB,2
+Sec_32-PROD-02- SINDEC - Windows 2008 Web Edition 64bits,12 GB,4
+Sec_33-PROD-01 - Pentaho AGHU - CentOS 7x64,8 GB,4
+Sec_33-PROD-02 - SISTEMA HOSPITALAR CUPS - DEBIAN 8 X64,1 GB,2
+Sec_33-PROD-04 - SISTEMA HOSPITALAR - JBOSS - DEBIAN 8 X64,12 GB,4
+Sec_33-PROD-06 - SISTEMA HOSPITALAR - PENTAHO - DEBIAN 8 X64,4 GB,2
+Sec_33-PROD-10 - Servidor Web - Debian 10 x64,4 GB,2
+Sec_33-PROD-11 - Gente Web - Ubuntu 20.04 LTS,20 GB,12
+Sec_33-PROD-12 - E-SUS - Ubuntu 22.04.2 LTS,16 GB,8
+Sec_33-PROD-13 - RH da SESAU - Ubuntu 20.04 x64,6 GB,6
+Sec_34-PROD-01 - Servidor de Aplicacao - Debian 11 x64,4 GB,4
+Sec_34-PROD-02 - Banco de Dados - Debian 11 x64,4 GB,8
+Sec_34-PROD-03 - Servidor de Aplicacao - Debian 11 x64,4 GB,2
+Sec_35-HML-02 - Novo Sidagro - CentOS 6.2,8 GB,8
+Sec_35-PROD-01 - Sidagro - CentOS,4 GB,2
+Sec_35-PROD-02 - SIDAGRO 2 PROD - CentOS 6 64,4 GB,4
+Sec_35-PROD-03 - Novo Sidagro - CentOS 6.2,16 GB,8
+Sec_35-PROD-04 - Novo Sidagro - CentOS 6.2,8 GB,8
+Sec_35-PROD-05 - Webserver python - Debian 10 x64,4 GB,2
+Sec_35-PROD-06 - PostgreSQL - Debian 10 x64,8 GB,2
+Sec_35-PROD-07 - Aplicacao - Debian 12,4 GB,2
+Sec_35-PROD-08 - MySQL - Debian 12,4 GB,2
+Sec_36-PROD-01 - Aplicação - Debian GNU/Linux 11,4 GB,2
+Sec_36-PROD-02 - MariaDB-MySql - Debian 11 x64,4 GB,2
+Sec_36-PROD-03 - Servidor de aplicacao - Debian 12 x64,4 GB,2
+Sec_37-HML-01 - MySQL - Debian 7.8 x64,2 GB,2
+Sec_37-HML-02 - CRIA CAE e OxeTech,4 GB,2
+Sec_37-PROD-01 - Debian 6 32 - Webserver - TBlog,2 GB,2
+Sec_37-PROD-04 - Aplicação e Banco de Dados,8 GB,4
+Sec_37-PROD-05 - Sistemas Internos - CentOS 6.8 64bits,3 GB,4
+Sec_37-PROD-08 - Experiment Alagoas - CentOS 6 x64,4 GB,2
+Sec_37-PROD-10 - Mapeamento Inovacao - Debian 8.4 x64,4 GB,2
+Sec_37-PROD-11-EXPERIMENT-CENTOS 7 X64,4 GB,2
+Sec_37-PROD-12 - Nginx Puma Rails - Ubuntu 18.04 LTS,8 GB,4
+Sec_37-PROD-13 - PostgreSQL - Ubuntu 18.04 LTS,8 GB,4
+Sec_37-PROD-14 - Nginx - Debian 10,8 GB,4
+Sec_37-PROD-15 - AppEduc - Debian 10,8 GB,2
+Sec_37-PROD-16 - CRIA - Debian 10 x64,8 GB,4
+"Sec_37-PROD-17 - LACCAN - Prostgre, Docker - Ubuntu 22.4 x64",8 GB,4
+Sec_37-PROD-18 - WebServer - Ubuntu 22.04 x64,4 GB,2
+Sec_38-PROD-01 - Sistema CUCA - CentOS 8,4 GB,2
+Sec_38-PROD-02 - Apache PHP e MySQL,4 GB,4
+Sec_38-PROD-03 - Digitalização MISA,4 GB,4
+Sec_39-PROD-01 - WebServices BD - Debian 7 x64,4 GB,2
+Sec_39-PROD-02 - WebServices BD - Debian 7.8 x64,4 GB,2
+Sec_39-PROD-04 - WebService - CentOS 7.0 x64,8 GB,2
+Sec_39-PROD-05 - Disque Denúncia - Debian 8 x64,6 GB,4
+Sec_39-PROD-06 - Alerta Celular - CentOS 7 x64,4 GB,2
+Sec_39-PROD-07 - Dados Abertos - Ubuntu 18.04 LTS,4 GB,4
+Sec_39-PROD-08 - Oracle Database 11g - BI - Oracle Linux 7.5 x64,16 GB,8
+Sec_39-PROD-09 - CentOS 7 x64,4 GB,2
+Sec_39-PROD-10 - CentOS 7 x64,4 GB,2
+Sec_39-PROD-11 - CentOS 7 x64,4 GB,2
+Sec_39-PROD-12 - Geoespaciais - CentOS 7 x64,16 GB,4
+Sec_39-PROD-20 - CAD GESTOR (APP),15.63 GB,8
+Sec_39-PROD-32 - OCOMON - ENSINO (BANCO E APP),2 GB,4
+Sec_39-PROD-34 - ALCATRAZ REPLICACAO (BANCO),6 GB,2
+Sec_39-PROD-40 - HOMOLOG APP (APP),15.2 GB,4
+Sec_39-PROD-41 - PROD-VPN-MONITORADOS,8.47 GB,2
+Sec_39-PROD-44 CONTAINERS,8 GB,4
+Sec_39-PROD-45 CONTAINERS-2,8 GB,4
+Sec_39-PROD-46 ZABBIX-FE,4 GB,2
+Sec_39-PROD-49 - Moodle - CentOS 7 x64,4 GB,2
+Sec_39-PROD-51 - HOMOLOGA APP,2 GB,1
+Sec_39-PROD-52 ZABBIX-BD,8 GB,4
+Sec_39-PROD-53 ZABBIX-SRV,8 GB,4
+Sec_40-HML-01,4 GB,1
+Sec_41-PROD-02 - SIGEAD - Windows Server 2003 64bits,8 GB,2
+Sec_41-PROD-08 - SIRPREV - Debian 7 x32,4 GB,4
+Sec_42-HML-01 - Balanceador - PFSENSE x64,4 GB,6
+Sec_42-HML-10 - Banco de Dados - Oracle Linux 7.3 x64,60 GB,12
+Sec_42-HML-13 - Ldap - SEPLAG - Debian 8.4 x64,4 GB,1
+Sec_42-HML-37 -DTIT- V4 - memcache - Debian 12 x64,4 GB,2
+Sec_42-HML-38 -DTIT- V4 - jod - Debian 12 x64,4 GB,2
+Sec_42-HML-41 - DTIT - V4 - NO1 - Debian 12 x64,4 GB,3
+Sec_42-HML-45 - DTIT - V4 - SOLR - Debian 12 x64,40 GB,8
+Sec_42-HML-47 - Oracle Linux 8 - Oracle 19c,60 GB,12
+Sec_42-HML-48 - MemCache DTIT - CentOS 7 x64,4 GB,2
+Sec_42-HML-49 - NFS - DTIT - CentOS 7 x64,4 GB,2
+Sec_42-HML-51- NFS- DTIT- V4 - CENTOS 7.4 X64,4 GB,2
+Sec_42-PROD-05 - V4 - jod - Debian 12 x64,12 GB,4
+Sec_42-PROD-09 - V4 - memcache - Debian 12 x64,8 GB,2
+Sec_42-PROD-11 - Ldap - Debian 8.4 x64,4 GB,1
+Sec_42-PROD-12 - Balanceador Master,8 GB,8
+Sec_42-PROD-13 - Banco de Dados Standby Dataguard - Oracle Linux 7.3 x64,16 GB,4
+Sec_42-PROD-27 - V4 - NO1 - Debian 12 x64,24 GB,8
+Sec_42-PROD-28 - V4 - SOLR - Debian 12 x64,70 GB,8
+Sec_42-PROD-29 - V4 - NO3 - Debian 12 x64,24 GB,8
+Sec_42-PROD-30 - V4 - NO4 - Debian 12 x64,24 GB,8
+Sec_42-PROD-31 - V4 - NO5 - Debian 12 x64,24 GB,8
+Sec_42-PROD-32 - V4 - NO6 - Debian 12 x64,24 GB,8
+Sec_42-PROD-33 - V4 - NO7 - Debian 12 x64,24 GB,8
+Sec_42-PROD-34 - V4 - NO2 - Debian 12 x64,24 GB,8
+Sec_42-PROD-35 - V4 - NO9 - Debian 12 x64,24 GB,8
+Sec_42-PROD-36 - V4 - NO10 - Debian 12 x64,24 GB,8
+Sec_42-PROD-37 - V4 - NO11 - Debian 12 x64,24 GB,8
+Sec_42-PROD-38 - V4 - NO12 - Debian 12 x64,24 GB,8
+Sec_42-PROD-40 - V4 - NO8 - Debian 12 x64,24 GB,8
+Sec_42-PROD-41 - NFS - Debian 12 x64,9 GB,6
+Sec_42-PROD-45 - Banco de Dados - Oracle Linux 8 x64,96 GB,22
+Sec_42-PROD-46 -NFS-Temp-V4-DEBIAN 12 x64,8 GB,2
+Sec_43-PROD-02 - Direito de Uso RH - Aplicacao - Debian 7.6 64 Bits,4 GB,4
+Sec_43-PROD-03 - Direito de Uso RH - Banco de Dados -Debian 7.6 64 Bits,4 GB,4
+Sec_43-PROD-04 - Residuos Solidos - Debian 7.6 64 Bits,4 GB,4
+Sec_43-PROD-06 - Modelagem de Previsao - Ubuntu 18.04 LTS x64,10 GB,12
+Sec_43-PROD-07 - Banco de Dados - PostgreSQL,4 GB,2
+Sec_43-PROD-08 - GDAL,16 GB,4
+Sec_43-PROD-09 - Comunicação com o Webservice da SEFAZ - Debian 11 x64,16 GB,8
+Sec_43-PROD-11 - Comunicação com o Webservice da SEFAZ - Ubuntu 22.04,8 GB,2
+Sec_43-PROD-12 - FTP Server - Debian 12 x64,8 GB,4
+Sec_44-PROD-01 - APP - Deixa Ela Quieta - Debian 12,4 GB,2
+Sec_45-HML-02 - DOEAL - clone segesp-prod-10,8 GB,8
+Sec_45-HML-03 - Apache - Debian 11 x64,8 GB,8
+Sec_45-HML-04 - Aplicação WEB - Debian GNU/Linux 11,8 GB,8
+Sec_45-HML-05 - Aplicação Formatadora - Windows Server 2019 STD,8 GB,8
+Sec_45-HML-06 - sistema web vida funcional - debian11 x64,16 GB,8
+Sec_45-HML-07 - POC - Ubuntu 22.04 x64,8 GB,4
+Sec_45-HML-08 - POC - Ubuntu 22.04 x64,8 GB,4
+Sec_45-HML-09 - POC - Ubuntu 22.04 x64,8 GB,4
+Sec_45-HML-10 - POC - RHEL 9.3 x64,8 GB,4
+Sec_45-HML-11 - Aplicação WEB – Apache e PHP 7.4,16 GB,8
+Sec_45-HML-12 - Ionews-Diario - Debian GNU/Linux 11,8 GB,8
+Sec_45-HML-13 - Publicador - Debian GNU/Linux 11,8 GB,8
+Sec_45-HML-14 - Formatador - Windows Server 2019 STD,8 GB,8
+Sec_45-HML-15 - GDPrev - Debian GNU/Linux 11,8 GB,8
+Sec_45-PROD-01 - AD - Windows 2012 R2 64 bits,4 GB,4
+Sec_45-PROD-02 - Servidor Arquivos - Windows 2008 R2 64 bits,16 GB,4
+Sec_45-PROD-07 - Aplicação WEB – Apache e PHP 7.4 - Debian 11 x64,8 GB,8
+Sec_45-PROD-11 - Orcamento - Ubuntu 14.04 x64,8 GB,4
+Sec_45-PROD-12 - Aplicação WEB - Debian GNU/Linux 11,8 GB,8
+Sec_45-PROD-14 - CAPACITAÇÃO - Ubuntu 14.04 64 Bits,4 GB,1
+Sec_45-PROD-16 - Aplicação WEB – Apache e PHP 7.4 - Debian 11 x64,16 GB,8
+Sec_45-PROD-18 - Banco de Documentos - Debian GNU%2fLinux 11,16 GB,4
+Sec_45-PROD-19 - GeoServer - Ubuntu 14.04 x64,4 GB,2
+Sec_45-PROD-23 - Al-Geo - Ubuntu 14.04 64 Bits,4 GB,4
+Sec_45-PROD-31 - PostgreSQL 14 - Debian GNU/Linux 11,8 GB,8
+Sec_45-PROD-32 - WebServer - Debian 8.4 x64,4 GB,2
+Sec_45-PROD-34 - NFS - Debian GNU/Linux 11,4 GB,4
+Sec_45-PROD-39 - QlikView - Windows 2008 R2 ENT x64,16 GB,4
+Sec_45-PROD-40 - QLIKVIEW - Windows 2008 R2 ENT x64,48 GB,8
+Sec_45-PROD-43 - Banco de Documentos – Elasticsearch 8 - Debian 11 x64,16 GB,4
+Sec_45-PROD-44 - App WEB - Debian 11,16 GB,8
+Sec_45-PROD-45 - GDPrev,8 GB,8
+Sec_45-PROD-56 - Covid - Debian 10 B,1 GB,2
+Sec_45-PROD-57 - Aplicacao Formatadora - Windows Server 2019 STD,8 GB,8
+Sec_45-PROD-60 - Aplicação WEB - Debian GNU/Linux 11,8 GB,8
+Sec_46-PROD-01 - Debian 6 32 Bits,2 GB,2
+Sec_46-PROD-02 - SIPLAG - Windows 2003 32,4 GB,6
+Sec_47-PROD-01 - AcolheAlagoas - Ubuntu 14.04 x64,6 GB,2
+Sec_48-PROD-01 - WebServer - Debian 8.1 x64,4 GB,4
+Sec_48-PROD-02 - Oracle Database 12cR2 - Oracle Linux 7.3 x64,8 GB,2
+Sec_48-PROD-03 - REAGES - Debian 8.4 x64,4 GB,4
+Sec_48-PROD-05 - Biometrico - Ubuntu 18.04 x64,6 GB,2
+Sec_48-PROD-07 - Laravel - Debian 10.4 x64,4 GB,2
+Sec_49-PROD-01 - WSUS - Windows 2012 STD x64,4 GB,2
+Sec_50-PROD-01- Hospedagem - Ubuntu 10.04 LTS,4 GB,2
+Sec_51-HML-01 - PENTAHO - CentOS 5.4 32 Bits,2 GB,2
+Sec_51-PROD-01 - Applinx Producao2 - CentOS,2 GB,2
+Sec_51-PROD-02 - Pentaho - CentOS 5.4 32 Bits,4 GB,2
+Sec_51-PROD-03 - CentOS 5.3 64 Bits,1 GB,2
+Sec_51-PROD-04 - Applinx Producao - CentOS 5.4 32 Bits,2 GB,2
+Sec_51-PROD-05 - Oracle Linux 6.3 32 Bits - BI -Sec_22,8 GB,2
+Sec_51-PROD-07 - CentOS 6.2 x64,2 GB,4
+Sec_51-PROD-08 - CentOS 6.2 x64,2 GB,4
+Sec_51-PROD-09 - WebService - Windows 2003 R2 x32 STD,4 GB,2
+Sec_51-PROD-10 - CentOS 5.4 32 Bits - Pentaho II - Siafem,2 GB,2
+Sec_51-PROD-11 -Ubuntu 12.04 Server 64 bits - Servidor de Aplicacao,4 GB,1
+Sec_51-PROD-13 - Gestao Projetos - Debian 8.4 x64,4 GB,1
+Sec_52-PROD-01 - Coruja - NFS - Ubuntu 22.04 LTS,8 GB,4
+Sec_52-PROD-02 - Coruja - API DEV - Ubuntu 22.04 LTS,4 GB,2
+Sec_52-PROD-03 - Coruja - API PRD - Ubuntu 22.04 LTS,8 GB,4
+Sec_52-PROD-04 - Coruja - PostgreSQL DEV - Ubuntu 22.04 LTS,8 GB,2
+Sec_52-PROD-05 - Coruja - PostgreSQL PRD - Ubuntu 22.04 LTS,8 GB,4
+Sec_52-PROD-06 - Coruja - Aplicacao DEV - Ubuntu 22.04 LTS,8 GB,2
+Sec_52-PROD-07 - Coruja - Aplicacao PRD - Ubuntu 22.04 LTS,8 GB,4
+Sec_52-PROD-08 - Coruja - Aplicacao DEV - Ubuntu 22.04 LTS,8 GB,2
+Sec_52-PROD-09 - SCN3,4 GB,2
+Sec_52-PROD-13 - SCN4,4 GB,2
+Sec_53-PROD-01 - Debian 6 64bits,2 GB,2
+Sec_53-PROD-02 - Webserver - CentOS 6.2 64 Bits,3 GB,4
+Sec_53-PROD-03- webserver - Debian 7 64bits,2 GB,2
+Sec_54-HML-01 - SUAP Teste - Debian 11,8 GB,2
+Sec_54-HML-02 - SUAP - DB - Testes e Treinamento - Debian11 x64,4 GB,2
+Sec_54-HML-03 - SUAP - APP - Testes e Treinamento - Debian11 x64,4 GB,2
+Sec_54-HML-04 - moodle - debian11 x64,32 GB,12
+Sec_54-PROD-01 - Spine - Debian 10 x64,16 GB,4
+Sec_54-PROD-02 - Tooth - Debian 10 x64,8 GB,2
+Sec_54-PROD-03 - Blood - Debian 10 x64,8 GB,2
+Sec_54-PROD-04 - Shank - Debian 10 x64,12 GB,4
+Sec_54-PROD-05 - Knee - Debian 10 x64,12 GB,4
+Sec_54-PROD-06 - moodle,32 GB,12
+Sec_54-PROD-07-WordPress-DEBIAN 11X64,8 GB,4
+Sec_54-PROD-08 - DNS - Debian 11,4 GB,1
+Sec_54-PROD-09 - SUAP Prod - Debian 11,16 GB,4
+Sec_54-PROD-10 - SUAP - DB - Debian11 x64,6 GB,4
+Sec_54-PROD-11 - SUAP - APP - Debian11 x64,8 GB,6
+Sec_55-PROD-03 - Ponto Eletronico - Ubuntu 22.04 LTS,8 GB,4
+Sec_55-PROD-04 - Sistema Academico - Ubuntu 22.04 LTS,30 GB,16
+Sec_55-PROD-05- SISTEMA DE VOTAÇÃO,8 GB,4
+Sec_55-PROD-06 - SAGU - Debian 11,20 GB,12
+Sec_55-PROD-07 - Helpdesk - Debian 11,4 GB,4
+Sec_55-PROD-08 - Moodle - Debian 11,4 GB,2
+Sec_55-PROD-09 - GED e Central de Serviços - Ubuntu 22.04,8 GB,8
+Sec_56-PROD-14 - Zabbix BD Master - CentOS 8 x64,32 GB,8
+Sec_56-PROD-15 - Zabbix BD Slave - CentOS 8 x64,16 GB,8
+Sec_56-PROD-17 - Proxy de Rede Wan,8 GB,2
+Sec_56-PROD-18 - Proxy de Nucleo de Rede,8 GB,2
+Sec_56-PROD-19 - FrontEnd,8 GB,2
+Sec_56-PROD-20 - Proxy DataCenter,8 GB,2
+Sec_56-PROD-21 - Zabbix 5 Server,8 GB,2
+Sec_56-PROD-23 - Zabbix BD - Master Novo - Oracle Linux 8,16 GB,2
+Sec_56-PROD-24 - FrontEnd - Zabbix 7 - Debian 12,8 GB,4
+Sec_56-PROD-25 - Server - Zabbix 7 - Debian 12,8 GB,4
+Sec_56-PROD-26 - Proxy Circuitos - Zabbix 7 - Debian 12,8 GB,4
+Sec_56-PROD-27- Proxy Ativos de Rede - Zabbix 7 - Debian 12,8 GB,4
+Sec_56-PROD-28- Proxy Datacenter - Zabbix 7 - Debian 12,3 GB,4
+Sec_56-PROD-29 - Grafana - Debian 11,4 GB,2
+Sec_56-PROD-30 - Zabbix Proxy - Debian 12 x64,2 GB,2
+Sec_57-PROD-01 - LDAP - CentOS 7x64,8 GB,4
+Sec_57-PROD-02 - Mailstore - CentOS 7x64,8 GB,4
+Sec_57-PROD-03 - MTA 01 - CentOS 7x64,8 GB,4
+Sec_57-PROD-04 - Proxy - CentOS 7x64,8 GB,4
+Sec_57-PROD-05 - MTA 02 - CentOS 7x64,8 GB,4
+Sec_57-PROD-06 - Backup - Debian 10.3 amd64,8 GB,4
+Sec_57-PROD-07 - Mailstore 2 - CentOS 7x64,8 GB,4
+Sec_57-PROD-08 - MailRelay - Debian 11,4 GB,2

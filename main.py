@@ -8,7 +8,10 @@ Arquivo Principal do Projeto DRE (Datacenter Resource Emulator)
 import pygame
 import sys
 
-from datacenter_model import carregar_cenario
+from datacenter_model import (
+    carregar_cenario_vmware,
+    carregar_cenario
+)
 from genetic_algorithm import (
     generate_round_robin_population,
     robin_hood_mutation,
@@ -28,6 +31,8 @@ WIDTH, HEIGHT = 1280, 740
 FPS = 30
 PLOT_X_OFFSET = 860
 CENARIO_FILE = 'cenario_desafiador.json'
+ARQUIVO_SERVIDORES_VMWARE = 'ExportList--servidores.csv'
+ARQUIVO_VMS_VMWARE = 'ExportList--VMs.csv'
 POPULATION_SIZE = 100
 N_GENERATIONS = 1000
 MAX_GENS_NO_IMPROVEMENT = 200
@@ -46,7 +51,11 @@ def main():
     pygame.display.set_caption("DRE - Datacenter Resource Emulator")
     clock = pygame.time.Clock()
 
-    datacenter_info = carregar_cenario(CENARIO_FILE) 
+    # NOTE: Cenários Fictícios:
+    # datacenter_info = carregar_cenario(CENARIO_FILE) 
+    # HACK: Cenário Real do vmware:
+    datacenter_info = carregar_cenario_vmware(ARQUIVO_SERVIDORES_VMWARE, ARQUIVO_VMS_VMWARE)
+
     if not datacenter_info:
         print("Falha ao carregar o cenário. Encerrando o programa.")
         exit()

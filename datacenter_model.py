@@ -10,8 +10,8 @@ Este arquivo define as classes para:
 
 
 # Importando
-import json
-from typing import List, Dict, Any
+import json, csv
+from typing import List, Dict, Any, Optional
 
 
 
@@ -102,6 +102,113 @@ class ServidorFisico:
 
 
 # ===[ Função para Carregar Cenário ]=====================================================
+
+def _parse_memory_string_to_gb(mem_str: str) -> int:
+    """
+    Função auxiliar para converter strings de memória (ex: "4 GB", "8,192.00 MB")
+    em um número inteiro de GIGABYTES (GB).
+    """
+    mem_str = mem_str.lower().replace(',', '').strip()
+    try:
+        if 'gb' in mem_str:
+            num_part = mem_str.replace('gb', '').strip()
+            return int(float(num_part)) # O valor já está em GB
+        elif 'mb' in mem_str:
+            num_part = mem_str.replace('mb', '').strip()
+            # Converte MB para GB e arredonda para baixo (int)
+            return int(float(num_part) / 1024)
+        else:
+            # Assume que um valor sem unidade está em GB
+            return int(float(mem_str))
+    except (ValueError, TypeError):
+        return 0
+
+# Dicionário para mapear o hardware real.
+# ADICIONE AQUI OS SEUS OUTROS MODELOS DE SERVIDOR E SEUS PROCESSADORES LÓGICOS
+HARDWARE_MAP = {
+    'cs-01-host': 24, # Exemplo: todos os hosts cs-01 têm 32 pCPUs
+    'cs-02-host': 24, # Exemplo: todos os hosts cs-02 têm 32 pCPUs
+    's-hpbl': 16      # Exemplo: um modelo mais antigo com 24 pCPUs
+}
+# Taxa de superalocação de CPU (vCPU:pCPU ratio). 4:1 é um valor seguro e comum.
+VCPU_PCPU_RATIO = 8
+RAM_OVERCOMMIT_RATIO = 1.5
+
+def _get_total_vcpus(hostname: str) -> int:
+    """Consulta o HARDWARE_MAP, encontra os pCPUs e calcula o total de vCPUs."""
+    for prefix, pcpus in HARDWARE_MAP.items():
+        if hostname.startswith(prefix):
+            return pcpus * VCPU_PCPU_RATIO
+    print(f"AVISO: Modelo de host desconhecido '{hostname}'. Usando 32*4=128 como padrão.")
+    return 32 * VCPU_PCPU_RATIO # Retorna um padrão se não encontrar
+
+def carregar_cenario_vmware(caminho_servidores: str, caminho_vms: str) -> Optional[Dict[str, Any]]:
+    """
+    Carrega um cenário do VMware, calculando a capacidade de CPU e RAM com
+    base nas taxas de superalocação.
+    """
+    mapeamento_servidores, mapeamento_vms, lista_servidores_obj, lista_vms_obj = {}, {}, [], []
+    print("\n--- Carregando Cenário VMware com Cálculo de Capacidade Real (CPU e RAM) ---")
+    try:
+        with open(caminho_servidores, mode='r', encoding='utf-8-sig') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for i, row in enumerate(reader):
+                nome_servidor = row['Name']
+                cpu_total = _get_total_vcpus(nome_servidor)
+                
+                # --- LÓGICA DE RAM CORRIGIDA ---
+                ram_fisica_gb = _parse_memory_string_to_gb(row['Memory Size (MB)'])
+                # Aplica a taxa de superalocação para obter a capacidade "alocável"
+                ram_total_alocavel = int(ram_fisica_gb * RAM_OVERCOMMIT_RATIO)
+                
+                servidor_obj = ServidorFisico(i, cpu_total, ram_total_alocavel)
+                lista_servidores_obj.append(servidor_obj)
+                mapeamento_servidores[i] = nome_servidor
+        print(f"Lidos {len(lista_servidores_obj)} servidores. Capacidade calculada com superalocação.")
+
+        with open(caminho_vms, mode='r', encoding='utf-8-sig') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for i, row in enumerate(reader):
+                nome_vm, cpu_req, ram_req_gb = row['Name'], int(row['CPUs']), _parse_memory_string_to_gb(row['Memory Size'])
+                vm_obj = MaquinaVirtual(i, cpu_req, ram_req_gb)
+                lista_vms_obj.append(vm_obj)
+                mapeamento_vms[i] = nome_vm
+        print(f"Lidas {len(lista_vms_obj)} VMs.")
+
+    # --- Verificação de Capacidade Total ---
+        # Soma a capacidade total de todos os servidores carregados
+        ram_total_dos_servidores = sum(serv.ram_total for serv in lista_servidores_obj)
+        cpu_total_dos_servidores = sum(serv.cpu_total for serv in lista_servidores_obj)
+        
+        # Soma os recursos totais requeridos por todas as VMs
+        ram_total_das_vms = sum(vm.ram_req for vm in lista_vms_obj)
+        cpu_total_das_vms = sum(vm.cpu_req for vm in lista_vms_obj)
+
+        # Verifica se a demanda total excede a capacidade total
+        if (ram_total_das_vms > ram_total_dos_servidores or 
+            cpu_total_das_vms > cpu_total_dos_servidores):
+            
+            print(f'''
+            ERRO: As VMs não cabem no datacenter. A demanda total de recursos excede a capacidade.
+
+            \t\t| Capacidade do DC \t| Demanda das VMs \t| Diferença
+            {'-'*75}
+            RAM (GB)\t| {ram_total_dos_servidores:<15} \t| {ram_total_das_vms:<15} \t| {ram_total_dos_servidores - ram_total_das_vms}
+            {'-'*75}
+            CPU (vCores)| {cpu_total_dos_servidores:<15} \t| {cpu_total_das_vms:<15} \t| {cpu_total_dos_servidores - cpu_total_das_vms}
+
+            Programa encerrado.
+            ''')
+            # Em vez de sys.exit(), é mais limpo retornar None para o main.py lidar com a saída.
+            return None
+
+        return {
+            "servidores": lista_servidores_obj, "vms": lista_vms_obj,
+            "mapeamento_servidores": mapeamento_servidores, "mapeamento_vms": mapeamento_vms
+        }
+    except Exception as e:
+        print(f"ERRO CRÍTICO ao carregar cenário: {e}")
+        return None
 
 def carregar_cenario(caminho_arquivo: str) -> Dict[str, Any]:
     """
