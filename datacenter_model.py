@@ -50,10 +50,11 @@ class ServidorFisico:
     Representa um único Servidor Físico (Host).
     VERSÃO ATUALIZADA: Inclui métodos para desalocar e resetar VMs.
     """
-    def __init__(self, servidor_id: int, cpu_total: int, ram_total: int):
+    def __init__(self, servidor_id: int, cpu_total: int, ram_total: int, nome_real: Optional[str] = None):
         self.id = servidor_id
         self.cpu_total = cpu_total
         self.ram_total = ram_total
+        self.nome_real = nome_real if nome_real else f"Servidor_{servidor_id}"
         self.vms_hospedadas: List[MaquinaVirtual] = []
 
     @property
@@ -184,7 +185,7 @@ def carregar_cenario_vmware(caminho_servidores: str, caminho_vms: str) -> Dict[s
 
                 servidor_id = i
                 lista_servidores.append(
-                    ServidorFisico(servidor_id, capacidade_cpu, capacidade_ram)
+                    ServidorFisico(servidor_id, capacidade_cpu, capacidade_ram, nome_real=hostname)
                 )
     except FileNotFoundError:
         print(f"ERRO: Arquivo de servidores não encontrado em '{caminho_servidores}'")

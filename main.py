@@ -10,7 +10,7 @@ from genetic_algorithm import (
     select_parents
 )
 from visualization import DatacenterVisualizer
-from relatorio import relatorio_json, relatorio_logico_json
+from relatorio import relatorio_json, relatorio_logico_json, gerar_relatorio_excel
 
 #===[ Constantes Globais ]================================================================
 CENARIO_ATIVO = 'vmware'
@@ -91,6 +91,7 @@ class GeneticAlgorithmRunner:
             print(f"Melhor solução final encontrada com fitness de: {self.last_best_fitness:.0f}")
             relatorio_json(self.best_solution_final, self.vms, self.servidores, "solucao_final_detalhada.json")
             relatorio_logico_json(self.best_solution_final, "solucao_final_logica.json")
+            gerar_relatorio_excel(self.best_solution_final, self.servidores, self.vms)
             
 #===[ Função Principal ]=================================================================
 def main():
