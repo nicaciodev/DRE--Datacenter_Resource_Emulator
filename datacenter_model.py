@@ -17,27 +17,30 @@ from typing import List, Dict, Any, Optional
 
 # ===[ Definição da Classe MaquinaVirtual ]==============================================
 
+# Em datacenter_model.py, substitua a classe MaquinaVirtual
+
 class MaquinaVirtual:
     """
     Representa uma única Máquina Virtual (VM).
     Funciona como um "item" a ser alocado no problema de Bin Packing.
     """
-    def __init__(self, vm_id: int, cpu_req: int, ram_req: int):
+    def __init__(self, vm_id: int, cpu_req: int, ram_req: int, nome_real: Optional[str] = None):
         """
         Inicializa uma VM.
         Args:
             vm_id (int): Identificador único da VM.
             cpu_req (int): Número de núcleos de CPU que a VM requer.
             ram_req (int): Quantidade de RAM (em GB) que a VM requer.
+            nome_real (Optional[str]): O nome original da VM vindo do arquivo.
         """
         self.id = vm_id
         self.cpu_req = cpu_req
         self.ram_req = ram_req
+        self.nome_real = nome_real if nome_real else f"VM_{vm_id}"
 
     def __repr__(self) -> str:
         """Retorna uma representação em string do objeto, útil para debug."""
         return f"VM(ID: {self.id}, CPU: {self.cpu_req}, RAM: {self.ram_req}GB)"
-
 
 
 # ===[ Definição da Classe ServidorFisico ]===============================================
@@ -45,16 +48,9 @@ class MaquinaVirtual:
 class ServidorFisico:
     """
     Representa um único Servidor Físico (Host).
-    Funciona como um "caixote" (bin) no problema de Bin Packing.
+    VERSÃO ATUALIZADA: Inclui métodos para desalocar e resetar VMs.
     """
     def __init__(self, servidor_id: int, cpu_total: int, ram_total: int):
-        """
-        Inicializa um Servidor Físico.
-        Args:
-            servidor_id (int): Identificador único do servidor.
-            cpu_total (int): Número total de núcleos de CPU do servidor.
-            ram_total (int): Quantidade total de RAM (em GB) do servidor.
-        """
         self.id = servidor_id
         self.cpu_total = cpu_total
         self.ram_total = ram_total
@@ -89,8 +85,21 @@ class ServidorFisico:
         if self.pode_hospedar(vm):
             self.vms_hospedadas.append(vm)
         else:
-            # Lança um erro se a alocação for inválida. Isso ajuda a detectar problemas.
             raise ValueError(f"Servidor {self.id} não tem capacidade para a VM {vm.id}.")
+
+    # --- NOVO MÉTODO ---
+    def desalocar_vm(self, vm: MaquinaVirtual):
+        """Remove uma VM deste servidor."""
+        try:
+            self.vms_hospedadas.remove(vm)
+        except ValueError:
+            # Opcional: Avisar se a VM não foi encontrada, útil para debug.
+            print(f"AVISO: Tentativa de remover a VM {vm.id} do Servidor {self.id}, mas ela não estava lá.")
+
+    # --- NOVO MÉTODO ---
+    def resetar(self):
+        """Remove todas as VMs deste servidor, deixando-o vazio."""
+        self.vms_hospedadas.clear()
 
     def __repr__(self) -> str:
         """Retorna uma representação em string do objeto, útil para debug."""
@@ -98,7 +107,6 @@ class ServidorFisico:
                 f"CPU: {self.cpu_usada}/{self.cpu_total}, "
                 f"RAM: {self.ram_usada}/{self.ram_total}GB, "
                 f"VMs: {len(self.vms_hospedadas)})")
-
 
 
 # ===[ Função para Carregar Cenário ]=====================================================
@@ -126,9 +134,10 @@ def _parse_memory_string_to_gb(mem_str: str) -> int:
 # Dicionário para mapear o hardware real.
 # ADICIONE AQUI OS SEUS OUTROS MODELOS DE SERVIDOR E SEUS PROCESSADORES LÓGICOS
 HARDWARE_MAP = {
-    'cs-01-host': 24, # Exemplo: todos os hosts cs-01 têm 32 pCPUs
-    'cs-02-host': 24, # Exemplo: todos os hosts cs-02 têm 32 pCPUs
-    's-hpbl': 16      # Exemplo: um modelo mais antigo com 24 pCPUs
+    # prefixo: {'pCPUs': <cores>, 'ram_gb': <ram>}
+    'cs-01-host': {'pCPUs': 24, 'ram_gb': 382},
+    'cs-02-host': {'pCPUs': 24, 'ram_gb': 382},
+    's-hpbl':     {'pCPUs': 16, 'ram_gb': 256}
 }
 # Taxa de superalocação de CPU (vCPU:pCPU ratio). 4:1 é um valor seguro e comum.
 VCPU_PCPU_RATIO = 8
@@ -136,79 +145,87 @@ RAM_OVERCOMMIT_RATIO = 1.5
 
 def _get_total_vcpus(hostname: str) -> int:
     """Consulta o HARDWARE_MAP, encontra os pCPUs e calcula o total de vCPUs."""
-    for prefix, pcpus in HARDWARE_MAP.items():
+    # <<< CORREÇÃO: A variável do loop foi renomeada para 'hardware_info' para clareza
+    for prefix, hardware_info in HARDWARE_MAP.items():
         if hostname.startswith(prefix):
-            return pcpus * VCPU_PCPU_RATIO
-    print(f"AVISO: Modelo de host desconhecido '{hostname}'. Usando 32*4=128 como padrão.")
+            # <<< CORREÇÃO: Acessa a chave 'pCPUs' do dicionário antes de multiplicar
+            return hardware_info['pCPUs'] * VCPU_PCPU_RATIO
+            
+    print(f"AVISO: Modelo de host desconhecido '{hostname}'. Usando 32*8=256 como padrão.")
+    # <<< CORREÇÃO: Usando o VCPU_PCPU_RATIO para consistência
     return 32 * VCPU_PCPU_RATIO # Retorna um padrão se não encontrar
 
-def carregar_cenario_vmware(caminho_servidores: str, caminho_vms: str) -> Optional[Dict[str, Any]]:
+# No arquivo datacenter_model.py, substitua a função inteira por esta:
+
+# Em datacenter_model.py, substitua a função carregar_cenario_vmware
+
+def carregar_cenario_vmware(caminho_servidores: str, caminho_vms: str) -> Dict[str, Any]:
     """
-    Carrega um cenário do VMware, calculando a capacidade de CPU e RAM com
-    base nas taxas de superalocação.
+    Carrega o cenário a partir de arquivos CSV do VMware.
     """
-    mapeamento_servidores, mapeamento_vms, lista_servidores_obj, lista_vms_obj = {}, {}, [], []
-    print("\n--- Carregando Cenário VMware com Cálculo de Capacidade Real (CPU e RAM) ---")
+    # --- Processamento dos Servidores ---
+    lista_servidores = []
     try:
         with open(caminho_servidores, mode='r', encoding='utf-8-sig') as csvfile:
             reader = csv.DictReader(csvfile)
             for i, row in enumerate(reader):
-                nome_servidor = row['Name']
-                cpu_total = _get_total_vcpus(nome_servidor)
+                hostname = row['Name'].strip()
                 
-                # --- LÓGICA DE RAM CORRIGIDA ---
-                ram_fisica_gb = _parse_memory_string_to_gb(row['Memory Size (MB)'])
-                # Aplica a taxa de superalocação para obter a capacidade "alocável"
-                ram_total_alocavel = int(ram_fisica_gb * RAM_OVERCOMMIT_RATIO)
+                # Usa sua função auxiliar original para CPU
+                capacidade_cpu = _get_total_vcpus(hostname)
                 
-                servidor_obj = ServidorFisico(i, cpu_total, ram_total_alocavel)
-                lista_servidores_obj.append(servidor_obj)
-                mapeamento_servidores[i] = nome_servidor
-        print(f"Lidos {len(lista_servidores_obj)} servidores. Capacidade calculada com superalocação.")
+                # Lógica corrigida para RAM, usando o novo HARDWARE_MAP
+                hardware_info = next((hw for prefix, hw in HARDWARE_MAP.items() if hostname.startswith(prefix)), None)
+                if hardware_info is None:
+                    # Garante que o padrão seja consistente com a função _get_total_vcpus
+                    capacidade_ram = 128 
+                else:
+                    capacidade_ram = hardware_info['ram_gb']
 
+                servidor_id = i
+                lista_servidores.append(
+                    ServidorFisico(servidor_id, capacidade_cpu, capacidade_ram)
+                )
+    except FileNotFoundError:
+        print(f"ERRO: Arquivo de servidores não encontrado em '{caminho_servidores}'")
+        return {'servidores': [], 'vms': []}
+    print(f"Lidos {len(lista_servidores)} servidores. Capacidade calculada com superalocação.")
+
+    # --- Processamento das VMs (lógica de unicidade mantida) ---
+    lista_vms = []
+    vm_mapa_nomes = {}
+    vm_id_counter = 0
+    try:
         with open(caminho_vms, mode='r', encoding='utf-8-sig') as csvfile:
             reader = csv.DictReader(csvfile)
-            for i, row in enumerate(reader):
-                nome_vm, cpu_req, ram_req_gb = row['Name'], int(row['CPUs']), _parse_memory_string_to_gb(row['Memory Size'])
-                vm_obj = MaquinaVirtual(i, cpu_req, ram_req_gb)
-                lista_vms_obj.append(vm_obj)
-                mapeamento_vms[i] = nome_vm
-        print(f"Lidas {len(lista_vms_obj)} VMs.")
+            for row in reader:
+                try:
+                    nome_vm_real = row['Name'].strip()
+                    if not nome_vm_real or nome_vm_real in vm_mapa_nomes:
+                        if nome_vm_real: print(f"AVISO: Nome de VM duplicado ignorado: '{nome_vm_real}'")
+                        continue
 
-    # --- Verificação de Capacidade Total ---
-        # Soma a capacidade total de todos os servidores carregados
-        ram_total_dos_servidores = sum(serv.ram_total for serv in lista_servidores_obj)
-        cpu_total_dos_servidores = sum(serv.cpu_total for serv in lista_servidores_obj)
+                    req_ram = _parse_memory_string_to_gb(row['Memory Size'])
+                    req_cpu = int(row['CPUs'])
+                    
+                    lista_vms.append(
+                        MaquinaVirtual(
+                            vm_id=vm_id_counter,
+                            cpu_req=req_cpu,
+                            ram_req=req_ram,
+                            nome_real=nome_vm_real
+                        )
+                    )
+                    vm_mapa_nomes[nome_vm_real] = vm_id_counter
+                    vm_id_counter += 1
+                except (ValueError, KeyError) as e:
+                    print(f"AVISO: Pulando linha de VM inválida: {row} | Erro: {e}")
+    except FileNotFoundError:
+        print(f"ERRO: Arquivo de VMs não encontrado em '{caminho_vms}'")
+        return {'servidores': [], 'vms': []}
         
-        # Soma os recursos totais requeridos por todas as VMs
-        ram_total_das_vms = sum(vm.ram_req for vm in lista_vms_obj)
-        cpu_total_das_vms = sum(vm.cpu_req for vm in lista_vms_obj)
-
-        # Verifica se a demanda total excede a capacidade total
-        if (ram_total_das_vms > ram_total_dos_servidores or 
-            cpu_total_das_vms > cpu_total_dos_servidores):
-            
-            print(f'''
-            ERRO: As VMs não cabem no datacenter. A demanda total de recursos excede a capacidade.
-
-            \t\t| Capacidade do DC \t| Demanda das VMs \t| Diferença
-            {'-'*75}
-            RAM (GB)\t| {ram_total_dos_servidores:<15} \t| {ram_total_das_vms:<15} \t| {ram_total_dos_servidores - ram_total_das_vms}
-            {'-'*75}
-            CPU (vCores)| {cpu_total_dos_servidores:<15} \t| {cpu_total_das_vms:<15} \t| {cpu_total_dos_servidores - cpu_total_das_vms}
-
-            Programa encerrado.
-            ''')
-            # Em vez de sys.exit(), é mais limpo retornar None para o main.py lidar com a saída.
-            return None
-
-        return {
-            "servidores": lista_servidores_obj, "vms": lista_vms_obj,
-            "mapeamento_servidores": mapeamento_servidores, "mapeamento_vms": mapeamento_vms
-        }
-    except Exception as e:
-        print(f"ERRO CRÍTICO ao carregar cenário: {e}")
-        return None
+    print(f"Lidas {len(lista_vms)} VMs únicas.")
+    return {'servidores': lista_servidores, 'vms': lista_vms}
 
 def carregar_cenario(caminho_arquivo: str) -> Dict[str, Any]:
     """

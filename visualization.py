@@ -1,157 +1,163 @@
-"""
-Módulo responsável por toda a lógica de visualização do projeto DRE.
-"""
+# Arquivo: visualization4.py
+# VERSÃO 4 FINAL: Polimento da interface, com importação direta e overflow corrigido.
 
-
-
-# Importando
-import pygame
-from typing import List, Tuple
+import tkinter as tk
+from tkinter import ttk
+from typing import List, Dict
 from datacenter_model import ServidorFisico, MaquinaVirtual
-try:
-    import matplotlib
-    import matplotlib.pyplot as plt
-    from matplotlib.backends.backend_agg import FigureCanvasAgg
-    matplotlib.use("Agg")
-    MATPLOTLIB_AVAILABLE = True
-except ImportError:
-    MATPLOTLIB_AVAILABLE = False
 
+# --- Importações do Gráfico (agora são obrigatórias) ---
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 # --- Constantes de Visualização ---
-SERVER_WIDTH = 300
-SERVER_HEIGHT = 220
-PADDING = 20
-BAR_HEIGHT = 20
-VM_COLOR = (100, 150, 250)
-VM_TEXT_COLOR = (255, 255, 255)
-STATS_BOX_HEIGHT = 120
-PLOT_AREA_WIDTH = 400
+SERVER_FRAME_WIDTH = 280
+SERVER_FRAME_HEIGHT = 200
+VM_GRID_COLUMNS = 4
+VM_BOX_WIDTH = 60
+VM_BOX_HEIGHT = 20
 
+# --- Classe auxiliar para o Gráfico ---
+class FitnessPlot:
+    def __init__(self, parent_frame):
+        self.fig = Figure(figsize=(4, 3), dpi=100)
+        self.ax = self.fig.add_subplot(111)
+        self.canvas = FigureCanvasTkAgg(self.fig, master=parent_frame)
+        self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
+    def update_plot(self, history: List[float]):
+        self.ax.clear()
+        self.ax.plot(history)
+        self.ax.set_title("Evolução do Fitness"); self.ax.set_xlabel("Geração")
+        self.ax.set_ylabel("Nº de Servidores"); self.ax.grid(True)
+        self.fig.tight_layout(pad=1.0); self.canvas.draw()
 
-# --- Função Principal de Desenho do Datacenter ---
+class DatacenterVisualizer:
+    def __init__(self, root: tk.Tk, servidores: List[ServidorFisico], vms: List[MaquinaVirtual]):
+        self.root = root
+        self.servidores_base = servidores
+        self.vms_base = vms
+        self.root.title("DRE - Datacenter Resource Emulator (Tkinter)")
+        self.root.geometry("1280x740")
 
-def draw_datacenter_state(screen: pygame.Surface, font: pygame.font.Font, servidores: List[ServidorFisico], best_solution: List[int], vms: List[MaquinaVirtual], plot_x_offset: int, scroll_x: int) -> int:
-    """
-    Desenha o estado do datacenter em uma superfície rolável (viewport).
-    """
+        main_frame = ttk.Frame(root, padding=10)
+        main_frame.pack(fill=tk.BOTH, expand=True)
 
-    # Desenhando o retângulo de visualização do mundo.
-    viewport_rect = pygame.Rect(0, 0, plot_x_offset - PADDING, screen.get_height())
+        left_frame = ttk.Frame(main_frame)
+        left_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-    # Calcula a largura e o número de colunas necessárias para o "mundo"
-    servidores_por_coluna = viewport_rect.height // (SERVER_HEIGHT + PADDING)
-    if servidores_por_coluna == 0: servidores_por_coluna = 1
-    num_colunas = -(-len(servidores) // servidores_por_coluna) # Truque para arredondar para cima
-    total_world_width = num_colunas * (SERVER_WIDTH + PADDING) + PADDING
+        self.canvas = tk.Canvas(left_frame)
+        scrollbar = ttk.Scrollbar(left_frame, orient="vertical", command=self.canvas.yview)
+        scrollable_frame = ttk.Frame(self.canvas)
+        scrollable_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+        self.canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        self.canvas.configure(yscrollcommand=scrollbar.set)
+        self.canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+        self.canvas.bind_all("<Button-4>", self._on_mousewheel)
+        self.canvas.bind_all("<Button-5>", self._on_mousewheel)
 
-    # Criando a paisagem.
-    world_surface = pygame.Surface((total_world_width, viewport_rect.height))
-    world_surface.fill(screen.get_at((1,1)))
+        right_frame = ttk.Frame(main_frame, width=420, padding=10)
+        right_frame.pack(side=tk.RIGHT, fill=tk.Y, expand=False)
+        right_frame.pack_propagate(False)
 
-    # Simulando a alocação dos objetos a desenhar.
-    temp_servidores = [ServidorFisico(s.id, s.cpu_total, s.ram_total) for s in servidores]
-    for vm_index, servidor_id in enumerate(best_solution):
-        if 0 <= servidor_id < len(temp_servidores):
-            try:
-                temp_servidores[servidor_id].alocar_vm(vms[vm_index])
-            except ValueError: pass
+        status_frame = ttk.LabelFrame(right_frame, text="Status da Simulação", padding=10)
+        status_frame.pack(fill=tk.X, anchor="n")
+        self.gen_label = ttk.Label(status_frame, text="Geração Atual: 0", font=("Consolas", 12))
+        self.gen_label.pack(anchor="w")
+        self.fitness_label = ttk.Label(status_frame, text="Melhor Fitness: N/A", font=("Consolas", 12))
+        self.fitness_label.pack(anchor="w")
+
+        plot_frame = ttk.Frame(right_frame, padding=(0, 10, 0, 0))
+        plot_frame.pack(fill=tk.BOTH, expand=True)
+        self.fitness_plot = FitnessPlot(plot_frame)
+        
+        self.server_widgets = {}
+        for i, servidor in enumerate(self.servidores_base):
+            server_frame = ttk.LabelFrame(scrollable_frame, text=f"Servidor ID: {servidor.id}", width=SERVER_FRAME_WIDTH, height=SERVER_FRAME_HEIGHT, padding=5)
+            server_frame.grid(row=i // 3, column=i % 3, padx=10, pady=10, sticky="nsew")
+            server_frame.grid_propagate(False)
+            
+            cpu_label = ttk.Label(server_frame, text=f"CPU: 0/{servidor.cpu_total}")
+            cpu_label.pack(anchor="w")
+            cpu_canvas = tk.Canvas(server_frame, width=250, height=18, bg="#E0E0E0", highlightthickness=1, highlightbackground="grey")
+            cpu_canvas.pack(anchor="w", pady=(0, 5))
+
+            ram_label = ttk.Label(server_frame, text=f"RAM: 0/{servidor.ram_total} GB")
+            ram_label.pack(anchor="w")
+            ram_canvas = tk.Canvas(server_frame, width=250, height=18, bg="#E0E0E0", highlightthickness=1, highlightbackground="grey")
+            ram_canvas.pack(anchor="w", pady=(0, 5))
+
+            vm_canvas = tk.Canvas(server_frame, background="#FFFFFF", highlightthickness=0)
+            vm_canvas.pack(fill="both", expand=True, pady=(5,0))
+
+            self.server_widgets[servidor.id] = {
+                "cpu_label": cpu_label, "cpu_canvas": cpu_canvas,
+                "ram_label": ram_label, "ram_canvas": ram_canvas,
+                "vm_canvas": vm_canvas
+            }
     
-    # Desenha os servidores no "mundo" preenchendo as colunas de cima para baixo
-    x, y = PADDING, PADDING
-    for servidor in temp_servidores:
-        draw_servidor(world_surface, font, servidor, x, y)
-        y += SERVER_HEIGHT + PADDING
-        if y + SERVER_HEIGHT > viewport_rect.height:
-            y = PADDING
-            x += SERVER_WIDTH + PADDING
-    # --- FIM DA LÓGICA DE LAYOUT ---
+    def _on_mousewheel(self, event):
+        if hasattr(event, 'delta') and event.delta != 0:
+             self.canvas.yview_scroll(-1 * (event.delta // 120), "units")
+        elif event.num == 4: self.canvas.yview_scroll(-1, "units")
+        elif event.num == 5: self.canvas.yview_scroll(1, "units")
 
-    max_scroll_x = total_world_width - viewport_rect.width
-    if max_scroll_x < 0: max_scroll_x = 0
-    scroll_x = max(0, min(scroll_x, max_scroll_x))
-    
-    screen.blit(world_surface, viewport_rect.topleft, (scroll_x, 0, viewport_rect.width, viewport_rect.height))
+    def update_view(self, best_solution: List[int], generation: int, best_fitness: float, history: List[float]):
+        uso_servidores = {s.id: {'cpu': 0, 'ram': 0, 'vms': []} for s in self.servidores_base}
+        for vm_idx, s_id in enumerate(best_solution):
+            if s_id != -1 and s_id in uso_servidores:
+                vm = self.vms_base[vm_idx]
+                uso_servidores[s_id]['cpu'] += vm.cpu_req
+                uso_servidores[s_id]['ram'] += vm.ram_req
+                uso_servidores[s_id]['vms'].append(vm.id)
 
-    return scroll_x
+        for servidor in self.servidores_base:
+            widgets = self.server_widgets[servidor.id]
+            uso = uso_servidores[servidor.id]
+            
+            widgets["cpu_label"].config(text=f"CPU: {uso['cpu']}/{servidor.cpu_total}")
+            cpu_canvas = widgets["cpu_canvas"]
+            cpu_canvas.delete("all")
+            cpu_percent = (uso['cpu'] / servidor.cpu_total) if servidor.cpu_total > 0 else 0
+            cpu_canvas.create_rectangle(0, 0, 250 * cpu_percent, 18, fill="#FF6464", outline="")
+            
+            widgets["ram_label"].config(text=f"RAM: {uso['ram']}/{servidor.ram_total} GB")
+            ram_canvas = widgets["ram_canvas"]
+            ram_canvas.delete("all")
+            ram_percent = (uso['ram'] / servidor.ram_total) if servidor.ram_total > 0 else 0
+            ram_canvas.create_rectangle(0, 0, 250 * ram_percent, 18, fill="#6464FF", outline="")
 
-def draw_servidor(screen: pygame.Surface, font: pygame.font.Font, servidor: ServidorFisico, x: int, y: int):
-    rect = pygame.Rect(x, y, SERVER_WIDTH, SERVER_HEIGHT)
-    pygame.draw.rect(screen, (245, 245, 245), rect, border_radius=5)
-    pygame.draw.rect(screen, (50, 50, 50), rect, 2, border_radius=5)
+            vm_canvas = widgets["vm_canvas"]
+            vm_canvas.delete("all")
+            vms_alocadas = sorted(uso['vms'])
+            
+            vm_canvas.update_idletasks()
+            canvas_height = vm_canvas.winfo_height()
+            vms_por_linha = max(1, (vm_canvas.winfo_width() - 4) // (VM_BOX_WIDTH + 5))
+            max_linhas = max(0, canvas_height // (VM_BOX_HEIGHT + 5))
+            max_vms_visiveis = max_linhas * vms_por_linha
 
-    # Escrevendo o cabeçalho.
-    id_text = font.render(f"Servidor ID: {servidor.id} ({len(servidor.vms_hospedadas)} VMs)", True, (0,0,0))
-    screen.blit(id_text, (x + 10, y + 10))
+            x, y = 2, 2
+            for i, vm_id in enumerate(vms_alocadas):
+                # <<< CORREÇÃO DO OVERFLOW: Reserva espaço para a mensagem "e mais..." >>>
+                if max_vms_visiveis > 0 and i >= (max_vms_visiveis - 1) and len(vms_alocadas) > max_vms_visiveis:
+                    vms_restantes = len(vms_alocadas) - i
+                    vm_canvas.create_text(x, y + 10, text=f"...e mais {vms_restantes}", anchor="w", font=("Consolas", 10))
+                    break
+                
+                vm_canvas.create_rectangle(x, y, x + VM_BOX_WIDTH, y + VM_BOX_HEIGHT, fill="#6496FA", outline="")
+                vm_canvas.create_text(x + VM_BOX_WIDTH / 2, y + VM_BOX_HEIGHT / 2, text=f"VM {vm_id}", fill="#FFFFFF", font=("Consolas", 10))
+                x += VM_BOX_WIDTH + 5
+                if x + VM_BOX_WIDTH > vm_canvas.winfo_width():
+                    x = 2; y += VM_BOX_HEIGHT + 5
+        
+        self.gen_label.config(text=f"Geração Atual: {generation}")
+        self.fitness_label.config(text=f"Melhor Fitness: {best_fitness:.2f}")
 
-    # Desenhando as barras.
-    cpu_percent = (servidor.cpu_usada / servidor.cpu_total) if servidor.cpu_total > 0 else 0
-    draw_usage_bar(screen, font, f"CPU: {servidor.cpu_usada}/{servidor.cpu_total}", cpu_percent, x + 10, y + 40, (255, 100, 100))
-    ram_percent = (servidor.ram_usada / servidor.ram_total) if servidor.ram_total > 0 else 0
-    draw_usage_bar(screen, font, f"RAM: {servidor.ram_usada}/{servidor.ram_total} GB", ram_percent, x + 10, y + 80, (100, 100, 255))
+        if self.fitness_plot and history:
+            self.fitness_plot.update_plot(history)
 
-    # Desenhando as VMs.
-    vm_x, vm_y = x + 10, y + 135
-    server_bottom_limit = y + SERVER_HEIGHT - PADDING
-    for vm in servidor.vms_hospedadas:
-        if vm_y + 25 > server_bottom_limit: # Desenha reticências se estoura a caixa.
-            ellipsis_rect = pygame.Rect(vm_x, vm_y, 60, 20) # Caixa amarela das reticências.
-            pygame.draw.rect(screen, (255, 240, 100), ellipsis_rect, border_radius=3)
-            ellipsis_text = font.render("...", True, (50, 50, 50))
-            screen.blit(ellipsis_text, (vm_x, vm_y))
-            break
-        vm_rect = pygame.Rect(vm_x, vm_y, 60, 25)
-        pygame.draw.rect(screen, VM_COLOR, vm_rect, border_radius=3)
-        vm_text = font.render(f"VM {vm.id}", True, VM_TEXT_COLOR)
-        screen.blit(vm_text, (vm_x + 5, vm_y + 5))
-        vm_x += 60 + 5
-        if vm_x + 60 > x + SERVER_WIDTH:
-            vm_x = x + 10
-            vm_y += 25 + 5
-
-def draw_usage_bar(screen: pygame.Surface, font: pygame.font.Font, label: str, percent: float, x: int, y: int, color: Tuple[int, int, int]):
-    BAR_WIDTH = SERVER_WIDTH - 20
-    label_surface = font.render(label, True, (0,0,0))
-    screen.blit(label_surface, (x, y))
-    y_pos = y + font.get_height() - 1
-    bg_rect = pygame.Rect(x, y_pos, BAR_WIDTH, BAR_HEIGHT)
-    pygame.draw.rect(screen, (220, 220, 220), bg_rect, border_radius=3)
-    fill_width = BAR_WIDTH * min(percent, 1.0)
-    fill_rect = pygame.Rect(x, y_pos, fill_width, BAR_HEIGHT)
-    pygame.draw.rect(screen, color, fill_rect, border_radius=3)
-
-def draw_fitness_plot(screen: pygame.Surface, history: List[float], x_offset: int) -> int:
-    if not MATPLOTLIB_AVAILABLE or not history:
-        return 0
-    fig_width = 400 / 100
-    fig, ax = plt.subplots(figsize=(fig_width, 4.5), dpi=100)
-    ax.plot(history)
-    ax.set_title("Evolução do Fitness")
-    ax.set_xlabel("Geração")
-    ax.set_ylabel("Nº de Servidores Usados")
-    ax.grid(True)
-    plt.tight_layout(pad=1.0)
-    canvas = FigureCanvasAgg(fig)
-    canvas.draw()
-    renderer = canvas.get_renderer()
-    raw_data = renderer.tostring_argb()
-    size = canvas.get_width_height()
-    surf = pygame.image.fromstring(raw_data, size, "ARGB")
-    screen.blit(surf, (x_offset, PADDING))
-    plt.close(fig)
-    return size[0]
-
-def draw_stats_box(screen: pygame.Surface, font: pygame.font.Font, generation: int, best_fitness: float, x_offset: int, box_width: int):
-    if box_width == 0: return
-    y_pos = PADDING + 450 + PADDING
-    stats_rect = pygame.Rect(x_offset, y_pos, box_width, STATS_BOX_HEIGHT)
-    pygame.draw.rect(screen, (240, 240, 240), stats_rect)
-    pygame.draw.rect(screen, (50, 50, 50), stats_rect, 2, border_radius=5)
-    title_text = font.render("Status da Simulação:", True, (0,0,0))
-    screen.blit(title_text, (x_offset + PADDING, y_pos + PADDING))
-    gen_text = font.render(f"Geração Atual: {generation}", True, (50,50,50))
-    screen.blit(gen_text, (x_offset + PADDING, y_pos + PADDING + 30))
-    fitness_text = font.render(f"Melhor Fitness: {best_fitness:.2f}", True, (50,50,50))
-    screen.blit(fitness_text, (x_offset + PADDING, y_pos + PADDING + 55))
+        self.root.update()

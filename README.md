@@ -1,5 +1,5 @@
 ## DRE - Datacenter Resource Emulator
-![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-1.3-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-14%2F07%2F2025-green)
+![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-2.0-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-24%2F07%2F2025-green)
 
 ___
 

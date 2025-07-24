@@ -23,85 +23,93 @@ from datacenter_model import MaquinaVirtual, ServidorFisico
 
 # ===[ 1. Geração da População Inicial ]================================================
 
+# Em genetic_algorithm.py, substitua a função generate_round_robin_population
+
 def generate_round_robin_population(vms: List[MaquinaVirtual], servidores: List[ServidorFisico], size: int) -> List[List[int]]:
     """
-    Gera uma população homogênea onde todas as VMs são distribuídas
-    de forma sequencial (Round-Robin) entre os servidores.
-
-    Isso resulta em uma solução inicial que usa muitos servidores, ideal
-    para demonstrar a otimização do AG ao longo do tempo.
+    Gera uma população inicial distribuindo as VMs em Round-Robin.
+    VERSÃO ATUALIZADA: Manipula diretamente o estado dos objetos 'servidores'
+    e os limpa após a criação da solução base.
     """
     num_servidores = len(servidores)
     num_vms = len(vms)
     
-    # 1. Cria UMA única solução base usando a lógica Round-Robin com verificação de capacidade
+    # Garante que todos os servidores estão vazios antes de começar.
+    for s in servidores:
+        s.resetar()
+
+    # 1. Cria UMA única solução base usando os objetos de servidor reais.
     base_individual = [-1] * num_vms
-    temp_servidores = copy.deepcopy(servidores)
 
     for vm_index in range(num_vms):
         vm_a_alocar = vms[vm_index]
         vm_alocada = False
         
         for i in range(num_servidores):
-            # O operador % faz o ciclo: 0, 1, 2, 3, 4, 0, 1, 2...
+            # O operador % faz o ciclo: 0, 1, 2, 0, 1, 2...
             servidor_id_alvo = (vm_index + i) % num_servidores
-            if temp_servidores[servidor_id_alvo].pode_hospedar(vm_a_alocar):
-                temp_servidores[servidor_id_alvo].alocar_vm(vm_a_alocar)
-                base_individual[vm_index] = servidor_id_alvo
+            servidor_alvo = servidores[servidor_id_alvo]
+            
+            if servidor_alvo.pode_hospedar(vm_a_alocar):
+                servidor_alvo.alocar_vm(vm_a_alocar)
+                base_individual[vm_index] = servidor_alvo.id
                 vm_alocada = True
                 break # VM alocada com sucesso, passa para a próxima VM
 
         if not vm_alocada:
             print(f"AVISO EM ROUND-ROBIN: A VM {vm_a_alocar.id} não pôde ser alocada em nenhum servidor.")
 
-    # 2. Cria a população final replicando a solução base
+    # 2. ETAPA CRUCIAL: Limpa o estado de todos os servidores.
+    # Após construir a solução, resetamos os servidores para que o AG
+    # comece a trabalhar com um datacenter "limpo".
+    for s in servidores:
+        s.resetar()
+
+    # 3. Cria a população final replicando a solução base.
     population = [list(base_individual) for _ in range(size)]
     return population
-
 
 
 # ===[ 2. Função de Fitness ]===========================================================
 
 def calculate_fitness(individual: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> float:
     """
-    Calcula o fitness de um único indivíduo.
-
-    O fitness é baseado no número de servidores utilizados.
-    Soluções que sobrecarregam servidores são invalidadas com uma penalidade altíssima.
-
-    Args:
-        individual (List[int]): A solução a ser avaliada.
-        vms (List[MaquinaVirtual]): A lista de objetos VM.
-        servidores (List[ServidorFisico]): A lista de objetos Servidor.
-
-    Returns:
-        float: O valor de fitness. Menor é melhor. Retorna infinito para soluções inválidas.
+    Calcula o fitness de um indivíduo seguindo o modelo "Lousa Limpa".
+    1. Reseta o estado dos servidores.
+    2. Simula a alocação do indivíduo.
+    3. Retorna o número de servidores usados ou infinito se a solução for inválida.
     """
-    # Usamos deepcopy para não alterar os objetos originais do servidor a cada simulação
-    temp_servidores = copy.deepcopy(servidores)
-    
-    # Simula a alocação do indivíduo
+    # PASSO 1: Prepara a "Lousa Limpa"
+    # Garante que todos os servidores estão vazios antes de começar a avaliação.
+    for s in servidores:
+        s.resetar()
+
+    # PASSO 2: Simula a alocação do indivíduo nos objetos reais
     for vm_index, servidor_id in enumerate(individual):
         vm_a_alocar = vms[vm_index]
-        servidor_alvo = temp_servidores[servidor_id]
         
-        # Verifica se o servidor tem capacidade. Se não tiver, a solução é inválida.
+        # Checagem de segurança para IDs inválidos no cromossomo
+        if not (0 <= servidor_id < len(servidores)):
+            return float('inf') 
+
+        servidor_alvo = servidores[servidor_id]
+        
+        # Validação: O servidor alvo tem capacidade?
         if not servidor_alvo.pode_hospedar(vm_a_alocar):
-            return float('inf')  # Penalidade máxima para soluções inválidas
+            return float('inf') # Penalidade máxima para soluções inválidas
         
-        # Se puder, aloca a VM no servidor temporário
+        # Se for válido, aloca a VM
         servidor_alvo.alocar_vm(vm_a_alocar)
 
-    # O fitness primário é o número de servidores que foram utilizados
-    servidores_usados = sum(1 for s in temp_servidores if len(s.vms_hospedadas) > 0)
+    # PASSO 3: Calcula o resultado
+    # O fitness é o número de servidores que foram utilizados nesta simulação.
+    servidores_usados = sum(1 for s in servidores if s.vms_hospedadas)
     
     return float(servidores_usados)
 
-
-
 # ===[ 3. Seleção dos Pais ]=============================================================
 
-def select_parents(population: List[List[int]], fitness_scores: List[float], num_parents: int = 2) -> List[List[int]]:
+def select_parents(population: List[List[int]],  num_parents: int = 2) -> List[List[int]]:
     """
     Seleciona os pais da população para o crossover.
     Uma forma simples é a seleção por torneio.
@@ -122,123 +130,13 @@ def select_parents(population: List[List[int]], fitness_scores: List[float], num
 
 # ===[ 4. Crossover ]===================================================================
 
-def doac_crossover_v4(parent1: List[int], parent2: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> Tuple[List[int], List[int]]:
+def doac_cross(parent1: List[int], parent2: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> Tuple[List[int], List[int]]:
     """
     Dominant Optimal Anti-Cancer
     Função principal do Crossover DOAC v4.
     Orquestra a criação de dois filhos, cada um baseado em um dos pais,
     """
     # Cria o primeiro filho usando o Pai 1 como referência principal
-    child1 = _criar_filho_doac_v4(parent1, parent2, vms, servidores)
-    
-    # Cria o segundo filho invertendo os papéis para gerar diversidade
-    child2 = _criar_filho_doac_v4(parent2, parent1, vms, servidores)
-
-    return child1, child2
-
-def _criar_filho_doac_v4(pai: List[int], mae: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> List[int]:
-    """
-    Dominant Optimal Anti-Cancer
-    1- Identifica o gene bom e o torna dominante.
-    2- Crusa os demais genes dos pais.
-    3- Ataca o Câncer no filho.
-    """
-    # PASSO 1: Inicia o filho e os estados temporários
-    num_vms = len(vms)
-    filho = [-1] * num_vms
-    vms_ja_alocadas = [False] * num_vms
-    temp_servidores_build = [ServidorFisico(s.id, s.cpu_total, s.ram_total) for s in servidores]
-    
-    # PASSO 2 & 3: Calcula fitness e identifica o melhor dos pais
-    fitness_pai = calculate_fitness(pai, vms, servidores)
-    fitness_mae = calculate_fitness(mae, vms, servidores)
-    melhor_pai = pai if fitness_pai <= fitness_mae else mae
-    
-    # PASSO 4 & 5: Identificar e Aplicar o Gene Dominante do MELHOR pai
-    servidores_ativos_melhor_pai = {s_id for s_id in melhor_pai if s_id != -1}
-    if servidores_ativos_melhor_pai:
-        id_servidor_dominante = max(servidores_ativos_melhor_pai, key=lambda s_id: servidores[s_id].cpu_total + servidores[s_id].ram_total)
-        vms_a_herdar_indices = [i for i, s_id in enumerate(melhor_pai) if s_id == id_servidor_dominante]
-        for vm_idx in vms_a_herdar_indices:
-            if not vms_ja_alocadas[vm_idx] and temp_servidores_build[id_servidor_dominante].pode_hospedar(vms[vm_idx]):
-                filho[vm_idx] = id_servidor_dominante
-                # PASSO 6: Marca a VM como usada
-                vms_ja_alocadas[vm_idx] = True
-                temp_servidores_build[id_servidor_dominante].alocar_vm(vms[vm_idx])
-
-    # PASSO 6 (continuação): Construção Alternada do Restante do Filho
-    for i in range(num_vms):
-        if filho[i] == -1: # Se a posição do filho está vazia
-            genitor = pai if i % 2 == 0 else mae
-            vm_idx_candidato = next((j for j in range(num_vms) if not vms_ja_alocadas[j]), -1)
-            
-            if vm_idx_candidato != -1:
-                servidor_proposto = genitor[vm_idx_candidato]
-                vm_a_alocar = vms[vm_idx_candidato]
-                
-                if temp_servidores_build[servidor_proposto].pode_hospedar(vm_a_alocar):
-                    filho[i] = servidor_proposto
-                else: # Fallback "First Fit"
-                    for s_id_alt in range(len(servidores)):
-                        if temp_servidores_build[s_id_alt].pode_hospedar(vm_a_alocar):
-                            filho[i] = s_id_alt
-                            break
-                
-                if filho[i] != -1:
-                    temp_servidores_build[filho[i]].alocar_vm(vm_a_alocar)
-                    vms_ja_alocadas[vm_idx_candidato] = True
-
-    # PASSO 7: Tratamento Anti-Câncer no filho já montado
-    servidores_ativos_filho = {s_id for s_id in filho if s_id != -1}
-    if len(servidores_ativos_filho) > 1:
-        id_cancer = min(servidores_ativos_filho, key=lambda s_id: servidores[s_id].cpu_total + servidores[s_id].ram_total)
-        
-        vms_no_cancer_idx = [i for i, s_id in enumerate(filho) if s_id == id_cancer]
-        servidores_alvo_ids = [s_id for s_id in servidores_ativos_filho if s_id != id_cancer]
-        
-        filho_reparado = list(filho)
-        sucesso_reparo = True
-        
-        # Simula o estado para o reparo
-        temp_servidores_reparo = [ServidorFisico(s.id, s.cpu_total, s.ram_total) for s in servidores]
-        for vm_idx, s_id in enumerate(filho_reparado):
-             if s_id != -1: temp_servidores_reparo[s_id].alocar_vm(vms[vm_idx])
-
-        for vm_idx in vms_no_cancer_idx:
-            vm_a_mover = vms[vm_idx]
-            temp_servidores_reparo[id_cancer].vms_hospedadas.remove(vm_a_mover)
-            
-            alocado = False
-            for novo_lar_id in servidores_alvo_ids:
-                if temp_servidores_reparo[novo_lar_id].pode_hospedar(vm_a_mover):
-                    filho_reparado[vm_idx] = novo_lar_id
-                    temp_servidores_reparo[novo_lar_id].alocar_vm(vm_a_mover)
-                    alocado = True
-                    break
-            
-            if not alocado:
-                sucesso_reparo = False
-                break
-        
-        if sucesso_reparo:
-            filho = filho_reparado # Aplica o reparo bem-sucedido
-
-    # PASSO 8: Validação Final e Retorno Seguro
-    if calculate_fitness(filho, vms, servidores) == float('inf'):
-        print(f"AVISO: Filho gerado pelo crossover com reparo era inválido. Retornando o melhor dos pais.")
-        return melhor_pai
-    else:
-        return filho
-
-
-def doac_crossover(parent1: List[int], parent2: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> Tuple[List[int], List[int]]:
-    """
-    Dominant Optimal Anti-Cancer
-    Função principal do Crossover DOAC.
-    Orquestra a criação de dois filhos a partir de dois pais, usando a lógica
-    de construção heurística projetada por você.
-    """
-    # Cria o primeiro filho usando o Pai 1 como referência para o "consenso"
     child1 = _criar_filho_doac(parent1, parent2, vms, servidores)
     
     # Cria o segundo filho invertendo os papéis para gerar diversidade
@@ -246,70 +144,99 @@ def doac_crossover(parent1: List[int], parent2: List[int], vms: List[MaquinaVirt
 
     return child1, child2
 
-def _criar_filho_doac(pai_base: List[int], pai_guia: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> List[int]:
+
+def _criar_filho_doac(pai: List[int], mae: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> List[int]:
     """
-    Cria um único filho seguindo a hierarquia de prioridades:
-    1. Anti-Câncer (Alocar a maior VM no maior servidor).
-    2. Consenso (Preservar o que os pais concordam).
-    3. Alocação Heurística do Resto (Maiores primeiro no mais folgado).
+    Cria um filho usando a lógica DOAC (Dominant Optimal Anti-Cancer)
+    seguindo o modelo "Lousa Limpa" - VERSÃO FINAL E ROBUSTA.
     """
     num_vms = len(vms)
+    
+    # PASSO 1: Identifica o melhor dos pais
+    fitness_pai = calculate_fitness(pai, vms, servidores)
+    fitness_mae = calculate_fitness(mae, vms, servidores)
+    melhor_pai = pai if fitness_pai <= fitness_mae else mae
+
+    # --- Início da Construção do Filho ---
     filho = [-1] * num_vms
-    vms_ja_alocadas = [False] * num_vms
-    temp_servidores = [ServidorFisico(s.id, s.cpu_total, s.ram_total) for s in servidores]
+    
+    # Limpa os servidores para iniciar a construção do zero ("Lousa Limpa").
+    for s in servidores:
+        s.resetar()
+            
+    # PASSO 2: Aplica o Gene Dominante
+    servidores_ativos_melhor_pai = {s_id for s_id in melhor_pai if s_id != -1}
+    if servidores_ativos_melhor_pai:
+        id_servidor_dominante = max(servidores_ativos_melhor_pai, key=lambda s_id: servidores[s_id].cpu_total + servidores[s_id].ram_total)
+        for vm_idx, s_id in enumerate(melhor_pai):
+            if s_id == id_servidor_dominante:
+                servidores[id_servidor_dominante].alocar_vm(vms[vm_idx])
+                filho[vm_idx] = id_servidor_dominante
 
-    # --- PASSO 1: AÇÃO ANTI-CÂNCER (PRIORIDADE MÁXIMA) ---
-    # Identifica a maior VM e o maior servidor
-    maior_vm_idx = max(range(num_vms), key=lambda i: vms[i].ram_req + vms[i].cpu_req)
-    maior_servidor_id = max(range(len(servidores)), key=lambda i: servidores[i].ram_total + servidores[i].cpu_total)
-
-    # Aloca a maior VM no maior servidor, se possível
-    if temp_servidores[maior_servidor_id].pode_hospedar(vms[maior_vm_idx]):
-        filho[maior_vm_idx] = maior_servidor_id
-        temp_servidores[maior_servidor_id].alocar_vm(vms[maior_vm_idx])
-        vms_ja_alocadas[maior_vm_idx] = True
-        # print("Ação Anti-Câncer aplicada.")
-
-    # --- PASSO 2: PRESERVAÇÃO DO CONSENSO (SEGUNDA PRIORIDADE) ---
+    # PASSO 3: Construção Alternada do Restante do Filho
     for i in range(num_vms):
-        # Se a VM ainda não foi alocada E os pais concordam sobre ela
-        if not vms_ja_alocadas[i] and pai_base[i] == pai_guia[i]:
-            servidor_id = pai_base[i]
-            if temp_servidores[servidor_id].pode_hospedar(vms[i]):
-                filho[i] = servidor_id
-                temp_servidores[servidor_id].alocar_vm(vms[i])
-                vms_ja_alocadas[i] = True
-
-    # --- PASSO 3: ALOCAÇÃO HEURÍSTICA DO RESTANTE (TERCEIRA PRIORIDADE) ---
-    # Pega todas as VMs que ainda não foram alocadas
-    vms_restantes_indices = [i for i, alocada in enumerate(vms_ja_alocadas) if not alocada]
-
-    # Ordena as VMs restantes da maior para a menor (Decreasing Size)
-    vms_restantes_ordenadas = sorted(
-        vms_restantes_indices,
-        key=lambda i: vms[i].ram_req + vms[i].cpu_req,
-        reverse=True
-    )
-
-    # Aloca as VMs restantes usando a lógica "Worst Fit"
-    for vm_idx in vms_restantes_ordenadas:
-        vm_a_alocar = vms[vm_idx]
+        if filho[i] == -1:
+            genitor = pai if i % 2 == 0 else mae
+            servidor_proposto_id = genitor[i]
+            vm_a_alocar = vms[i]
+            if 0 <= servidor_proposto_id < len(servidores) and servidores[servidor_proposto_id].pode_hospedar(vm_a_alocar):
+                servidores[servidor_proposto_id].alocar_vm(vm_a_alocar)
+                filho[i] = servidor_proposto_id
+            else:
+                for s in sorted(servidores, key=lambda srv: srv.ram_disponivel, reverse=True):
+                    if s.pode_hospedar(vm_a_alocar):
+                        s.alocar_vm(vm_a_alocar)
+                        filho[i] = s.id
+                        break
+    
+    # PASSO 4: Tratamento Anti-Câncer (Lógica Robusta)
+    servidores_ativos_filho = {s_id for s_id in filho if s_id != -1}
+    if len(servidores_ativos_filho) > 1:
+        id_cancer = min(servidores_ativos_filho, key=lambda s_id: servidores[s_id].cpu_total + servidores[s_id].ram_total)
+        servidor_cancer = servidores[id_cancer]
+        vms_no_cancer_idx = [i for i, s_id in enumerate(filho) if s_id == id_cancer]
+        servidores_alvo = sorted([s for s in servidores if s.id in servidores_ativos_filho and s.id != id_cancer], key=lambda srv: srv.ram_disponivel, reverse=True)
         
-        # Ordena os servidores pelo maior espaço livre
-        servidores_disponiveis_ordenados = sorted(
-            range(len(servidores)),
-            key=lambda s_id: temp_servidores[s_id].ram_disponivel + temp_servidores[s_id].cpu_disponivel,
-            reverse=True
-        )
+        filho_reparado = list(filho)
+        sucesso_reparo_total = True
+        
+        for vm_idx in vms_no_cancer_idx:
+            vm_a_mover_obj = vms[vm_idx]
+            alocado = False
+            for novo_lar in servidores_alvo:
+                if novo_lar.pode_hospedar(vm_a_mover_obj):
+                    servidor_cancer.desalocar_vm(vm_a_mover_obj)
+                    novo_lar.alocar_vm(vm_a_mover_obj)
+                    filho_reparado[vm_idx] = novo_lar.id
+                    alocado = True
+                    break
+            if not alocado:
+                sucesso_reparo_total = False
+                break
+        
+        # <<< MELHORIA DE ROBUSTEZ: Verifica o sucesso do reparo >>>
+        if sucesso_reparo_total:
+            # Se o reparo foi um sucesso, o 'filho' se torna a versão reparada.
+            # O estado dos objetos 'servidores' já está correto.
+            filho = filho_reparado
+        else:
+            # Se o reparo falhou, o 'filho' continua sendo o original (antes do reparo).
+            # Para garantir a consistência, limpamos os servidores e reconstruímos
+            # o estado para corresponder ao 'filho' original.
+            for s in servidores:
+                s.resetar()
+            for vm_idx, s_id in enumerate(filho):
+                if s_id != -1:
+                    servidores[s_id].alocar_vm(vms[vm_idx])
 
-        for servidor_id in servidores_disponiveis_ordenados:
-            if temp_servidores[servidor_id].pode_hospedar(vm_a_alocar):
-                filho[vm_idx] = servidor_id
-                temp_servidores[servidor_id].alocar_vm(vm_a_alocar)
-                break # Passa para a próxima VM
-
-    return filho
-
+    # PASSO 5: Validação Final
+    for s in servidores:
+        s.resetar()
+        
+    if -1 in filho:
+        return melhor_pai
+    else:
+        return filho
 
 def crossover_por_consenso(parent1: List[int], parent2: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> Tuple[List[int], List[int]]:
     """
@@ -453,42 +380,47 @@ def robin_hood_mutation(individual: List[int], vms: List[MaquinaVirtual], servid
 
 def swap_mutation(individual: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico], probability: float) -> List[int]:
     """
-    Realiza a mutação de troca entre duas VMs, garantindo a validade da solução.
+    Realiza a mutação de troca (swap) entre duas VMs, garantindo a validade da solução
+    e seguindo o modelo "Lousa Limpa".
     """
-    mutated_individual = list(individual)
     if random.random() < probability and len(vms) >= 2:
-        # 1. Sorteia dois índices de VM diferentes
+        # PASSO 1: Sorteia dois índices de VM diferentes para a troca
         vm_index_1, vm_index_2 = random.sample(range(len(vms)), 2)
 
-        # 2. Pega as informações sobre as VMs e seus servidores atuais
-        server_id_1 = mutated_individual[vm_index_1]
-        server_id_2 = mutated_individual[vm_index_2]
+        server_id_1 = individual[vm_index_1]
+        server_id_2 = individual[vm_index_2]
 
         # Não faz sentido trocar VMs que já estão no mesmo servidor
         if server_id_1 == server_id_2:
-            return mutated_individual
+            return individual
 
+        # PASSO 2: Prepara a "Lousa Limpa" e constrói o estado atual
+        # Limpamos todos os servidores e depois alocamos as VMs conforme o 'individual'
+        for s in servidores:
+            s.resetar()
+        for i, s_id in enumerate(individual):
+            if s_id != -1:
+                servidores[s_id].alocar_vm(vms[i])
+        
+        # Pega os objetos relevantes
         vm1 = vms[vm_index_1]
         vm2 = vms[vm_index_2]
         servidor1 = servidores[server_id_1]
         servidor2 = servidores[server_id_2]
 
-        # 3. Simula o estado dos servidores APÓS a troca
-        # Carga atual do Servidor 1 SEM a VM1, mas COM a VM2
-        nova_cpu_s1 = sum(vms[i].cpu_req for i, s_id in enumerate(mutated_individual) if s_id == server_id_1 and i != vm_index_1) + vm2.cpu_req
-        nova_ram_s1 = sum(vms[i].ram_req for i, s_id in enumerate(mutated_individual) if s_id == server_id_1 and i != vm_index_1) + vm2.ram_req
+        # PASSO 3: Simula a troca DESALOCANDO as VMs de suas posições atuais
+        servidor1.desalocar_vm(vm1)
+        servidor2.desalocar_vm(vm2)
 
-        # Carga atual do Servidor 2 SEM a VM2, mas COM a VM1
-        nova_cpu_s2 = sum(vms[i].cpu_req for i, s_id in enumerate(mutated_individual) if s_id == server_id_2 and i != vm_index_2) + vm1.cpu_req
-        nova_ram_s2 = sum(vms[i].ram_req for i, s_id in enumerate(mutated_individual) if s_id == server_id_2 and i != vm_index_2) + vm1.ram_req
+        # PASSO 4: Verifica se a troca é válida nos servidores agora "vazios"
+        if servidor1.pode_hospedar(vm2) and servidor2.pode_hospedar(vm1):
+            # A troca é válida. Aplica a mutação no cromossomo.
+            individual[vm_index_1] = server_id_2
+            individual[vm_index_2] = server_id_1
+        
+        # PASSO 5: Limpa a "bancada" para a próxima função
+        # Independentemente de a mutação ter ocorrido ou não, resetamos os servidores.
+        for s in servidores:
+            s.resetar()
 
-        # 4. Verifica se a troca é válida
-        if (nova_cpu_s1 <= servidor1.cpu_total and nova_ram_s1 <= servidor1.ram_total and
-            nova_cpu_s2 <= servidor2.cpu_total and nova_ram_s2 <= servidor2.ram_total):
-            
-            # 5. Se for válida, aplica a troca
-            mutated_individual[vm_index_1] = server_id_2
-            mutated_individual[vm_index_2] = server_id_1
-
-    return mutated_individual
-
+    return individual
