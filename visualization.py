@@ -65,9 +65,9 @@ class DatacenterVisualizer:
 
         status_frame = ttk.LabelFrame(right_frame, text="Status da Simulação", padding=10)
         status_frame.pack(fill=tk.X, anchor="n")
-        self.gen_label = ttk.Label(status_frame, text="Geração Atual: 0", font=("Consolas", 12))
+        self.gen_label = ttk.Label(status_frame, text="Geração Atual: 0")
         self.gen_label.pack(anchor="w")
-        self.fitness_label = ttk.Label(status_frame, text="Melhor Fitness: N/A", font=("Consolas", 12))
+        self.fitness_label = ttk.Label(status_frame, text="Melhor Fitness: N/A")
         self.fitness_label.pack(anchor="w")
 
         plot_frame = ttk.Frame(right_frame, padding=(0, 10, 0, 0))
@@ -145,11 +145,11 @@ class DatacenterVisualizer:
                 # <<< CORREÇÃO DO OVERFLOW: Reserva espaço para a mensagem "e mais..." >>>
                 if max_vms_visiveis > 0 and i >= (max_vms_visiveis - 1) and len(vms_alocadas) > max_vms_visiveis:
                     vms_restantes = len(vms_alocadas) - i
-                    vm_canvas.create_text(x, y + 10, text=f"...e mais {vms_restantes}", anchor="w", font=("Consolas", 10))
+                    vm_canvas.create_text(x, y + 10, text=f"...e mais {vms_restantes}", anchor="w")
                     break
                 
                 vm_canvas.create_rectangle(x, y, x + VM_BOX_WIDTH, y + VM_BOX_HEIGHT, fill="#6496FA", outline="")
-                vm_canvas.create_text(x + VM_BOX_WIDTH / 2, y + VM_BOX_HEIGHT / 2, text=f"VM {vm_id}", fill="#FFFFFF", font=("Consolas", 10))
+                vm_canvas.create_text(x + VM_BOX_WIDTH / 2, y + VM_BOX_HEIGHT / 2, text=f"VM {vm_id}", fill="#FFFFFF")
                 x += VM_BOX_WIDTH + 5
                 if x + VM_BOX_WIDTH > vm_canvas.winfo_width():
                     x = 2; y += VM_BOX_HEIGHT + 5

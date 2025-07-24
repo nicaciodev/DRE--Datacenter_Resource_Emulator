@@ -1,4 +1,4 @@
-# Arquivo [main.py] - Versão Final Refatorada com Classes (Corrigida)
+# Arquivo [main.py] 
 
 import tkinter as tk
 from datacenter_model import carregar_cenario_vmware, carregar_cenario
@@ -28,7 +28,6 @@ ELITISM_SIZE = 2
 class GeneticAlgorithmRunner:
     """
     Esta classe encapsula toda a lógica e o estado da simulação do AG.
-    Isso organiza o código e resolve os alertas da IDE.
     """
     def __init__(self, root, app, vms, servidores):
         self.root = root
