@@ -1,5 +1,9 @@
 # Arquivo [main.py] 
 
+'''
+Arquivo Principal do D.R.E.
+'''
+
 import tkinter as tk
 from datacenter_model import carregar_cenario_vmware, carregar_cenario
 from genetic_algorithm import (
@@ -13,7 +17,7 @@ from visualization import DatacenterVisualizer
 from relatorio import relatorio_json, relatorio_logico_json, gerar_relatorio_excel
 
 #===[ Constantes Globais ]================================================================
-CENARIO_ATIVO = 'vmware'
+CENARIO_ATIVO = 'vmware' # NOTE: Troque para 'no_vmware' para executar com um cenário fictício.
 CENARIO_FILE = 'cenario_desafiador.json'
 ARQUIVO_SERVIDORES_VMWARE = 'ExportList--servidores.csv'
 ARQUIVO_VMS_VMWARE = 'ExportList--VMs.csv'
@@ -30,12 +34,13 @@ class GeneticAlgorithmRunner:
     Esta classe encapsula toda a lógica e o estado da simulação do AG.
     """
     def __init__(self, root, app, vms, servidores):
-        self.root = root
-        self.app = app
+        self.root = root # Referência a janela principal da aplicação Tkinter. (Tempo)
+        self.app = app # Referência ao objeto da interface gráfica. (Conteúdo)
         self.vms = vms
         self.servidores = servidores
 
         # Inicializa o estado do AG
+        # NOTE: Gerando a população inicial:
         self.population = generate_round_robin_population(self.vms, self.servidores, POPULATION_SIZE)
         self.generation_count = 0
         self.last_best_fitness = float('inf')
@@ -51,6 +56,7 @@ class GeneticAlgorithmRunner:
     def _run_generation(self):
         """Executa uma única geração do AG e agenda a próxima."""
         if self.generation_count < N_GENERATIONS and self.generations_without_improvement < MAX_GENS_NO_IMPROVEMENT:
+            # NOTE: Calculando o fitness:
             population_fitness = [calculate_fitness(individual, self.vms, self.servidores) for individual in self.population]
             sorted_pairs = sorted(zip(population_fitness, self.population), key=lambda pair: pair[0])
             sorted_population = [pair[1] for pair in sorted_pairs]
@@ -71,10 +77,13 @@ class GeneticAlgorithmRunner:
 
             self.app.update_view(best_solution_this_gen, self.generation_count, best_fitness_this_gen, self.best_fitness_history)
 
+            # NOTE: Elitismo:
             new_population = sorted_population[:ELITISM_SIZE]
             while len(new_population) < POPULATION_SIZE:
                 parent1, parent2 = select_parents(sorted_population)
+                # NOTE: Crossover DOAC (Dominant Optimal Anti-Cancer - Anticâncer Ótimo Dominante):
                 child1, child2 = doac_cross(parent1, parent2, self.vms, self.servidores)
+                # NOTE: Mutação:
                 child1 = swap_mutation(child1, self.vms, self.servidores, MUTATION_PROBABILITY)
                 child2 = swap_mutation(child2, self.vms, self.servidores, MUTATION_PROBABILITY)
                 new_population.append(child1)

@@ -1,3 +1,5 @@
+# Arquivo [genetic_algorithm.py]
+
 """
 Módulo que contém a lógica principal do Algoritmo Genético para o projeto DRE.
 
@@ -9,27 +11,20 @@ Este arquivo define as funções para:
 - Aplicar mutação em um indivíduo.
 """
 
-
-
 # Importando
 import random
 import copy
-from typing import List, Tuple, Dict, Any
-
-# Importa as classes do modelo de datacenter
+from typing import List, Tuple
 from datacenter_model import MaquinaVirtual, ServidorFisico
 
 
 
 # ===[ 1. Geração da População Inicial ]================================================
 
-# Em genetic_algorithm.py, substitua a função generate_round_robin_population
-
 def generate_round_robin_population(vms: List[MaquinaVirtual], servidores: List[ServidorFisico], size: int) -> List[List[int]]:
     """
     Gera uma população inicial distribuindo as VMs em Round-Robin.
-    VERSÃO ATUALIZADA: Manipula diretamente o estado dos objetos 'servidores'
-    e os limpa após a criação da solução base.
+    "Lousa Limpa": Garante que todos os servidores estão vazios antes de começar.
     """
     num_servidores = len(servidores)
     num_vms = len(vms)
@@ -107,6 +102,7 @@ def calculate_fitness(individual: List[int], vms: List[MaquinaVirtual], servidor
     
     return float(servidores_usados)
 
+
 # ===[ 3. Seleção dos Pais ]=============================================================
 
 def select_parents(population: List[List[int]],  num_parents: int = 2) -> List[List[int]]:
@@ -125,7 +121,6 @@ def select_parents(population: List[List[int]],  num_parents: int = 2) -> List[L
     
     parents = random.sample(selection_pool, k=num_parents)
     return parents
-
 
 
 # ===[ 4. Crossover ]===================================================================

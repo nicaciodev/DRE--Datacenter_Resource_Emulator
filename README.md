@@ -1,5 +1,5 @@
 ## DRE - Datacenter Resource Emulator
-![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-2.0-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-24%2F07%2F2025-green)
+![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-2.1-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-25%2F07%2F2025-green)
 
 ___
 
@@ -158,7 +158,6 @@ python main.py
 * `environment.yml`: Gerência das libs utilizadas no Anaconda.
 * `datacenter_model.py`: Define os objetos do datacenter.
 * `genetic_algorithm.py`: Deine fitness, mutação, crossover etc.
-* `historico.txt`: História e experimentos.
 * `visualization.py`: A funções para montar o dashborad.
 
 ## Autor

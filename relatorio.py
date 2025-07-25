@@ -1,13 +1,13 @@
+# Arquivo [relatorio.py]
+
 """
 Módulo responsável pela geração de relatórios do projeto DRE.
 """
 
-
-
 # Importando:
 import json
 
-from typing import List, Dict, Any
+from typing import List
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
 from datacenter_model import ServidorFisico, MaquinaVirtual
@@ -131,7 +131,6 @@ def gerar_relatorio_excel(
     wb = Workbook()
     ws = wb.active
     
-    # <<< AQUI ESTÁ A CORREÇÃO QUE SATISFAZ A IDE >>>
     # Verifica se a planilha (worksheet) foi criada com sucesso antes de usá-la.
     if ws is None:
         print("ERRO CRÍTICO: Não foi possível criar a planilha no arquivo Excel.")

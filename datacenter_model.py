@@ -17,8 +17,6 @@ from typing import List, Dict, Any, Optional
 
 # ===[ Definição da Classe MaquinaVirtual ]==============================================
 
-# Em datacenter_model.py, substitua a classe MaquinaVirtual
-
 class MaquinaVirtual:
     """
     Representa uma única Máquina Virtual (VM).
@@ -133,7 +131,6 @@ def _parse_memory_string_to_gb(mem_str: str) -> int:
         return 0
 
 # Dicionário para mapear o hardware real.
-# ADICIONE AQUI OS SEUS OUTROS MODELOS DE SERVIDOR E SEUS PROCESSADORES LÓGICOS
 HARDWARE_MAP = {
     # prefixo: {'pCPUs': <cores>, 'ram_gb': <ram>}
     'cs-01-host': {'pCPUs': 24, 'ram_gb': 382},
@@ -146,19 +143,12 @@ RAM_OVERCOMMIT_RATIO = 1.5
 
 def _get_total_vcpus(hostname: str) -> int:
     """Consulta o HARDWARE_MAP, encontra os pCPUs e calcula o total de vCPUs."""
-    # <<< CORREÇÃO: A variável do loop foi renomeada para 'hardware_info' para clareza
     for prefix, hardware_info in HARDWARE_MAP.items():
         if hostname.startswith(prefix):
-            # <<< CORREÇÃO: Acessa a chave 'pCPUs' do dicionário antes de multiplicar
             return hardware_info['pCPUs'] * VCPU_PCPU_RATIO
             
     print(f"AVISO: Modelo de host desconhecido '{hostname}'. Usando 32*8=256 como padrão.")
-    # <<< CORREÇÃO: Usando o VCPU_PCPU_RATIO para consistência
     return 32 * VCPU_PCPU_RATIO # Retorna um padrão se não encontrar
-
-# No arquivo datacenter_model.py, substitua a função inteira por esta:
-
-# Em datacenter_model.py, substitua a função carregar_cenario_vmware
 
 def carregar_cenario_vmware(caminho_servidores: str, caminho_vms: str) -> Dict[str, Any]:
     """
@@ -227,6 +217,7 @@ def carregar_cenario_vmware(caminho_servidores: str, caminho_vms: str) -> Dict[s
         
     print(f"Lidas {len(lista_vms)} VMs únicas.")
     return {'servidores': lista_servidores, 'vms': lista_vms}
+
 
 def carregar_cenario(caminho_arquivo: str) -> Dict[str, Any]:
     """

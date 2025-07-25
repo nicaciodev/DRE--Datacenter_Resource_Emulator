@@ -1,7 +1,5 @@
 # Arquivo [sanity.py]
 
-
-
 # Importações:
 import json
 from typing import List
@@ -191,10 +189,6 @@ def datacenter_info_sanity_check(datacenter_info):
     # print("Sanity check concluído: A estrutura de dados 'datacenter_info' é válida.")
 
 
-
-# Arquivo [sanity.py]
-
-# ... (importações e a função datacenter_info_sanity_check já existentes) ...
 
 def population_sanity_check(population, population_size, datacenter_info):
     """
