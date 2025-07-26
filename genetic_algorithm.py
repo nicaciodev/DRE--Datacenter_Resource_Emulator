@@ -233,78 +233,139 @@ def _criar_filho_doac(pai: List[int], mae: List[int], vms: List[MaquinaVirtual],
     else:
         return filho
 
-def crossover_por_consenso(parent1: List[int], parent2: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> Tuple[List[int], List[int]]:
-    """
-    Realiza um Crossover de Particionamento por Consenso.
-    Este método garante que os filhos gerados sejam sempre válidos.
-    """
-    
-    # --- Filho 1 ---
-    child1, _ = criar_filho_cpc(parent1, parent2, vms, servidores)
-    
-    # --- Filho 2 ---
-    # Para o segundo filho, podemos inverter a ordem dos pais para gerar diversidade
-    child2, _ = criar_filho_cpc(parent2, parent1, vms, servidores)
 
-    return child1, child2
-
-def criar_filho_cpc(pai_base: List[int], pai_guia: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]):
+def ffd_crossover(vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> Tuple[List[int], List[int]]:
     """
-    Função auxiliar que cria um único filho usando a lógica CPC.
-    Crossover de Particionamento por Consenso
+    Implementa o algoritmo 'First Fit Decreasing' (FFD) como um operador "crossover".
+    
+    Este é um método convencional de comparação. Ele ignora os pais e constrói
+    uma solução do zero, servindo como uma excelente linha de base para o AG.
     """
     num_vms = len(vms)
-    filho = [-1] * num_vms # Preenche o filho inicialmente com valores inválidos.
-    
-    # 1. Particionamento: Encontra o consenso e o conflito
+    solucao_ffd = [-1] * num_vms
+
+    # PASSO 1: Ordena as VMs em ordem decrescente (a parte "Decreasing" do FFD)
+    # Usamos uma tupla para o critério de ordenação: primeiro por RAM, depois por CPU como desempate.
+    vms_ordenadas = sorted(enumerate(vms), key=lambda item: (item[1].ram_req, item[1].cpu_req), reverse=True)
+
+    # Prepara a "Lousa Limpa" para a alocação
+    for s in servidores:
+        s.resetar()
+
+    # PASSO 2: Aloca cada VM na lógica "First Fit"
+    for vm_index, vm_obj in vms_ordenadas:
+        alocado = False
+        for servidor in servidores: # Procura no primeiro servidor que couber
+            if servidor.pode_hospedar(vm_obj):
+                servidor.alocar_vm(vm_obj)
+                solucao_ffd[vm_index] = servidor.id
+                alocado = True
+                break
+        
+        if not alocado:
+            print(f"AVISO EM FFD: A VM {vm_obj.id} não pôde ser alocada em nenhum servidor.")
+
+    # Limpa os servidores após o uso
+    for s in servidores:
+        s.resetar()
+
+    # Retorna a mesma solução duas vezes para satisfazer a estrutura do crossover
+    return solucao_ffd, solucao_ffd
+
+
+def _criar_filho_cpc(pai_base: List[int], pai_guia: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> List[int]:
+    """
+    Função auxiliar que cria um único filho usando a lógica CPC.
+    """
+    num_vms = len(vms)
+    filho = [-1] * num_vms
+
+    # 1. Prepara a "Lousa Limpa"
+    for s in servidores:
+        s.resetar()
+
+    # 2. Particionamento: Encontra o consenso e o conflito.
     vms_consenso_indices = {i for i in range(num_vms) if pai_base[i] == pai_guia[i]}
     vms_conflito_indices = [i for i in range(num_vms) if i not in vms_consenso_indices]
-    
-    # Embaralha a ordem de alocação do conflito para adicionar aleatoriedade
     random.shuffle(vms_conflito_indices)
 
-    # 2. Construção da Base do Filho com o Consenso
-    temp_servidores = copy.deepcopy(servidores)
+    # 3. Construção da Base do Filho com o Consenso.
     for vm_idx in vms_consenso_indices:
         servidor_id = pai_base[vm_idx]
-        filho[vm_idx] = servidor_id
-        temp_servidores[servidor_id].alocar_vm(vms[vm_idx])
+        if 0 <= servidor_id < len(servidores):
+            filho[vm_idx] = servidor_id
+            servidores[servidor_id].alocar_vm(vms[vm_idx])
 
-    # NOTE: Esta forma tem viés com a ordem dos servidores.
-    # 3. Alocação Inteligente do Conflito usando First Fit
+    # 4. Alocação Inteligente do Conflito
     for vm_idx in vms_conflito_indices:
-        vm_alocada = False
-        for servidor_id in range(len(servidores)):
-            if temp_servidores[servidor_id].pode_hospedar(vms[vm_idx]):
-                filho[vm_idx] = servidor_id
-                temp_servidores[servidor_id].alocar_vm(vms[vm_idx])
-                vm_alocada = True
-                break
-
-    # HACK: Lógica "Worst Fit": Ordena os servidores.
-    # for vm_idx in vms_conflito_indices:
-    #     vm_a_alocar = vms[vm_idx]
-    #     vm_alocada = False
-    #     # LÓGICA "WORST FIT" REFINADA: Ordena por RAM livre e depois por CPU livre
-    #     servidores_disponiveis_ordenados = sorted(
-    #         range(len(servidores)),
-    #         key=lambda s_id: (temp_servidores[s_id].ram_disponivel, temp_servidores[s_id].cpu_disponivel),
-    #         reverse=True
-    #     )
-    #     for servidor_id in servidores_disponiveis_ordenados:
-    #         if temp_servidores[servidor_id].pode_hospedar(vm_a_alocar):
-    #             filho[vm_idx] = servidor_id
-    #             temp_servidores[servidor_id].alocar_vm(vm_a_alocar)
-    #             vm_alocada = True
-    #             break
+        vm_a_alocar = vms[vm_idx]
+        alocado = False
         
-        if not vm_alocada:
-            print(f"AVISO EM CROSSOVER: Não foi possível alocar a VM de conflito {vm_idx}.")
-            # Se não couber em lugar nenhum, alocamos em um lugar aleatório (gerando um indivíduo inválido que será punido)
-            filho[vm_idx] = random.randint(0, len(servidores) - 1)
+        sugestao_pai1 = pai_base[vm_idx]
+        if 0 <= sugestao_pai1 < len(servidores) and servidores[sugestao_pai1].pode_hospedar(vm_a_alocar):
+            filho[vm_idx] = sugestao_pai1
+            servidores[sugestao_pai1].alocar_vm(vm_a_alocar)
+            alocado = True
+        
+        if not alocado:
+            sugestao_pai2 = pai_guia[vm_idx]
+            if 0 <= sugestao_pai2 < len(servidores) and servidores[sugestao_pai2].pode_hospedar(vm_a_alocar):
+                filho[vm_idx] = sugestao_pai2
+                servidores[sugestao_pai2].alocar_vm(vm_a_alocar)
+                alocado = True
+
+        if not alocado:
+            for servidor in sorted(servidores, key=lambda s: s.ram_disponivel, reverse=True):
+                if servidor.pode_hospedar(vm_a_alocar):
+                    filho[vm_idx] = servidor.id
+                    servidor.alocar_vm(vm_a_alocar)
+                    break
+    
+    # 5. Limpeza Final
+    for s in servidores:
+        s.resetar()
+        
+    return filho
 
 
-    return filho, temp_servidores
+def crossover_por_consenso(parent1: List[int], parent2: List[int], vms: List[MaquinaVirtual], servidores: List[ServidorFisico]) -> Tuple[List[int], List[int]]:
+    """
+    Realiza um Crossover de Particionamento por Consenso (CPC), com uma
+    lógica "Anti-Gêmeos" para garantir a diversidade inicial.
+    """
+    # --- Lógica Anti-Gêmeos ---
+    if parent1 == parent2:
+        filho_mutante = list(parent1)
+        
+        for s in servidores:
+            s.resetar()
+        for i, s_id in enumerate(filho_mutante):
+            if s_id != -1: servidores[s_id].alocar_vm(vms[i])
+            
+        servidores_em_uso = [s for s in servidores if s.vms_hospedadas]
+        
+        if len(servidores_em_uso) > 1:
+            servidor_a_esvaziar = min(servidores_em_uso, key=lambda s: len(s.vms_hospedadas))
+            vms_para_mover = list(servidor_a_esvaziar.vms_hospedadas)
+            servidor_a_esvaziar.resetar()
+            
+            outros_servidores = [s for s in servidores_em_uso if s.id != servidor_a_esvaziar.id]
+            for vm_obj in vms_para_mover:
+                for outro_servidor in sorted(outros_servidores, key=lambda s: s.ram_disponivel, reverse=True):
+                    if outro_servidor.pode_hospedar(vm_obj):
+                        outro_servidor.alocar_vm(vm_obj)
+                        filho_mutante[vm_obj.id] = outro_servidor.id
+                        break
+        
+        for s in servidores:
+            s.resetar()
+        return filho_mutante, list(filho_mutante)
+
+    # --- Lógica de Crossover Normal ---
+    child1 = _criar_filho_cpc(parent1, parent2, vms, servidores)
+    child2 = _criar_filho_cpc(parent2, parent1, vms, servidores)
+
+    return child1, child2
 
 
 

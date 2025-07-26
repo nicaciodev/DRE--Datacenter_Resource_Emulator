@@ -9,6 +9,8 @@ from datacenter_model import carregar_cenario_vmware, carregar_cenario
 from genetic_algorithm import (
     generate_round_robin_population,
     swap_mutation,
+    ffd_crossover,
+    crossover_por_consenso,
     doac_cross,
     calculate_fitness,
     select_parents
@@ -25,7 +27,7 @@ ARQUIVO_VMS_VMWARE = 'ExportList--VMs.csv'
 POPULATION_SIZE = 100
 N_GENERATIONS = 1000
 MAX_GENS_NO_IMPROVEMENT = 200
-MUTATION_PROBABILITY = 0.5
+MUTATION_PROBABILITY = 0.2
 ELITISM_SIZE = 2
 
 #===[ Classe para Orquestrar o Algoritmo Genético ]=======================================
@@ -81,7 +83,9 @@ class GeneticAlgorithmRunner:
             new_population = sorted_population[:ELITISM_SIZE]
             while len(new_population) < POPULATION_SIZE:
                 parent1, parent2 = select_parents(sorted_population)
-                # NOTE: Crossover DOAC (Dominant Optimal Anti-Cancer - Anticâncer Ótimo Dominante):
+                # NOTE: Crossover por consendo: 
+                # child1, child2 = crossover_por_consenso(parent1, parent2, self.vms, self.servidores)
+                # HACK: Crossover DOAC (Dominant Optimal Anti-Cancer - Anticâncer Ótimo Dominante):
                 child1, child2 = doac_cross(parent1, parent2, self.vms, self.servidores)
                 # NOTE: Mutação:
                 child1 = swap_mutation(child1, self.vms, self.servidores, MUTATION_PROBABILITY)
