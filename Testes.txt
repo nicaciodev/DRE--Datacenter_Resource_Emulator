@@ -1,0 +1,70 @@
+[ Crossover: Por Consenso ]
+	|-> Cenário: Real em vmware.
+	|-> População Inicial = generate_round_robin_population.
+	|	\-> Distriuiçao igual das vms nos servidores.
+	|
+	|-> Mutação: swap_mutation 
+	|       \-> Taxa: 0.5
+	|
+	|-> Finaliza no número máximo de gerações sem evoluir = 200
+	|
+	\-> Resultados
+		|-> Geração 210: Melhor Fitness = 20
+		|-> Geração 212: Melhor Fitness = 20
+		\-> Geração 278: Melhor Fitness = 18
+
+
+
+[ Crossover: Por Consenso ]
+	|-> Cenário: Real em vmware.
+	|-> População Inicial = generate_round_robin_population.
+	|	\-> Distriuiçao igual das vms nos servidores.
+	|
+	|-> Mutação: swap_mutation 
+	|       \-> Taxa: 0.8 <-- Alteração.
+	|
+	|-> Finaliza no número máximo de gerações sem evoluir = 200
+	|
+	\-> Resultados
+		|-> Geração 210: Melhor Fitness = 20
+		|-> Geração 237: Melhor Fitness = 18
+		\-> Geração 230: Melhor Fitness = 20
+
+
+
+[ Crossover: D.O.A.C. - Dominant Optimal Anti-Cancer ] <--- Alteração.
+        |	\-> Minha autoria baseada na biologia real.
+	|
+	|-> Cenário: Real em vmware.
+	|-> População Inicial = generate_round_robin_population.
+	|	\-> Distriuiçao igual das vms nos servidores.
+	|
+	|-> Mutação: swap_mutation 
+	|       \-> Taxa: 0.5 <--- Alteração.
+	|
+	|-> Finaliza no número máximo de gerações sem evoluir = 200
+	|
+	\-> Resultados
+		|-> Geração 215: Melhor Fitness = 16
+		|-> Geração 210: Melhor Fitness = 16
+		\-> Geração 215: Melhor Fitness = 16
+
+
+
+[ Crossover: D.O.A.C. - Dominant Optimal Anti-Cancer ]
+        |	\-> Minha autoria baseada na biologia real.
+	|
+	|-> Cenário: Real em vmware.
+	|-> População Inicial = generate_round_robin_population.
+	|	\-> Distriuiçao igual das vms nos servidores.
+	|
+	|-> Mutação: swap_mutation 
+	|       \-> Taxa: 0.2 <--- Alteração.
+	|
+	|-> Finaliza no número máximo de gerações sem evoluir = 200
+	|
+	\-> Resultados
+		|-> Geração 215: Melhor Fitness = 16
+		|-> Geração 215: Melhor Fitness = 16
+		\-> Geração 215: Melhor Fitness = 16
+

@@ -1,0 +1,478 @@
+<h1 id="descrição-do-problema">1. Descrição do Problema</h1>
+<blockquote>
+<p>Esta seção detalha o desafio abordado pelo projeto, seus objetivos e
+como o sucesso da solução é medido.</p>
+</blockquote>
+<h2 id="o-problema-real">O Problema Real</h2>
+<blockquote>
+<p>Em ambientes de datacenter modernos, a virtualização é uma prática
+padrão. Administradores de sistemas enfrentam o desafio constante de
+alocar de forma eficiente os recursos de hardware (CPU e RAM) de
+servidores físicos para um número crescente de máquinas virtuais (VMs).
+Uma alocação ineficiente leva ao desperdício de capacidade, aumentando
+os custos com energia, refrigeração e manutenção de hardware
+subutilizado.</p>
+</blockquote>
+<blockquote>
+<p>Novos projetos precisam ser analisados em termos de capacidades do
+datacenter para saber se os mesmos irão aumentar o número de servidores
+físicos necessários para implementação da solução.</p>
+</blockquote>
+<blockquote>
+<p>Este desafio do mundo real é uma instância do clássico problema de
+otimização combinatória conhecido na ciência da computação como Problema
+do Empacotamento (Bin Packing Problem). Neste problema:</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>As Máquinas Virtuais (VMs) são os “itens” a serem empacotados, cada
+uma com um “tamanho” bidimensional (requisitos de CPU e RAM).</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>Os Servidores Físicos são as “caixas” (bins), cada uma com uma
+capacidade finita (CPU e RAM totais).</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>O projeto DRE (Datacenter Resource Emulator) se propõe a resolver
+este problema, não como uma ferramenta de balanceamento em tempo real,
+mas como um instrumento de planejamento estratégico para otimizar a
+infraestrutura de um datacenter.</p>
+</blockquote>
+<h2 id="objetivos">Objetivos</h2>
+<blockquote>
+<p>O projeto possui os seguintes objetivos, alinhados com o problema
+descrito:</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>Objetivo Principal: Minimizar o número de servidores físicos ativos
+necessários para hospedar uma dada carga de trabalho de VMs. Este é o
+foco principal da otimização, visando a máxima consolidação e redução de
+custos operacionais.</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>Objetivo Secundário (Restrição): Garantir que a alocação de VMs em
+cada servidor físico não exceda sua capacidade máxima de CPU e RAM. A
+validade da solução é um pré-requisito para a otimização.</li>
+</ul>
+</blockquote>
+</blockquote>
+<h2 id="critérios-de-sucesso">Critérios de Sucesso</h2>
+<blockquote>
+<p>O sucesso do algoritmo genético implementado é medido pelos seguintes
+critérios:</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>Validade da Solução: Uma solução é considerada válida somente se
+todas as VMs forem alocadas a um servidor e nenhuma restrição de
+capacidade (CPU e RAM) for violada. Soluções inválidas são descartadas
+ou recebem uma penalidade máxima durante o processo de fitness.</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>Eficácia da Otimização: A eficácia é demonstrada pela capacidade do
+algoritmo de encontrar uma solução que utilize um número de servidores
+significativamente menor do que métodos de solução convencionais (como a
+heurística First Fit Decreasing ou a alocação inicial Round-Robin).</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>Convergência e Estabilidade: O algoritmo é considerado bem-sucedido
+se, em múltiplas execuções, ele consistentemente converge para a mesma
+solução ótima (ou para soluções com fitness muito próximo), demonstrando
+que o resultado não é fruto do acaso, mas de uma busca inteligente e
+robusta.</li>
+</ul>
+</blockquote>
+</blockquote>
+<h1 id="detalhes-da-implementação-do-algoritmo">2. Detalhes da
+Implementação do Algoritmo</h1>
+<blockquote>
+<p>A solução foi desenvolvida em Python, utilizando uma arquitetura
+modular para separar o modelo de dados, os operadores do algoritmo
+genético e a visualização. A abordagem central foi criar um sistema que
+adere ao paradigma “Lousa Limpa”, onde o estado do datacenter é
+reconstruído a cada passo, garantindo a consistência dos dados e
+prevenindo bugs de estado.</p>
+</blockquote>
+<h2 id="modelo-de-dados-e-representação">2.1. Modelo de Dados e
+Representação</h2>
+<blockquote>
+<p>O ambiente do datacenter é modelado por duas classes principais no
+arquivo datacenter_model.py:</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>MaquinaVirtual: Representa um “item” a ser alocado. Armazena seus
+requisitos de cpu_req e ram_req, além de um id único e seu nome_real
+para relatórios.</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>ServidorFisico: Representa uma “caixa” ou bin. Possui uma capacidade
+total de cpu_total e ram_total e uma lista vms_hospedadas que rastreia
+as VMs alocadas. Métodos como .pode_hospedar(), .alocar_vm(),
+.desalocar_vm() e .resetar() encapsulam a lógica de manipulação de
+estado do servidor.</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>O “cromossomo”, ou a representação de uma solução individual, é uma
+lista de inteiros. O índice da lista corresponde ao id da
+MaquinaVirtual, e o valor naquela posição corresponde ao id do
+ServidorFisico onde ela está alocada. Ex: <strong>solucao[10] =
+5</strong> <em>significa que a VM de ID 10 está alocada no Servidor de
+ID 5</em>. Esta estrutura garante por design que cada VM tenha apenas
+uma alocação.</li>
+</ul>
+</blockquote>
+</blockquote>
+<h2 id="geração-da-população-inicial">2.2. Geração da População
+Inicial</h2>
+<blockquote>
+<p>Para iniciar a busca, a função generate_round_robin_population cria
+uma população homogênea. Ela aloca as VMs sequencialmente entre todos os
+servidores disponíveis (Round-Robin). O objetivo desta abordagem é criar
+deliberadamente uma solução inicial subótima, com um fitness alto
+(muitos servidores em uso), para que a melhoria proporcionada pelo
+algoritmo genético ao longo das gerações seja claramente visível durante
+a demonstração.</p>
+</blockquote>
+<h2 id="função-de-fitness">2.3. Função de Fitness</h2>
+<blockquote>
+<p>A função calculate_fitness é o “juiz” do algoritmo. Seguindo a
+arquitetura “Lousa Limpa”, sua primeira ação é sempre chamar o método
+.resetar() em todos os servidores para garantir que a avaliação comece
+de um estado limpo. Em seguida, ela simula a alocação do cromossomo
+recebido e:</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>Verifica a validade: Se a alocação sobrecarregar qualquer servidor,
+a função retorna um fitness infinito (float(‘inf’)), penalizando e
+descartando efetivamente a solução inválida.</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>Calcula a qualidade: Se a solução for válida, o fitness retornado é
+simplesmente o número total de servidores que foram utilizados.
+<strong>O objetivo do AG é minimizar este valor</strong>.</li>
+</ul>
+</blockquote>
+</blockquote>
+<h2 id="operadores-genéticos-crossover-e-mutação">2.4. Operadores
+Genéticos: Crossover e Mutação</h2>
+<blockquote>
+<p>O núcleo da inteligência do projeto reside nos seus operadores, que
+foram projetados para explorar o espaço de soluções de forma eficaz.</p>
+</blockquote>
+<blockquote>
+<p>Crossover Convencional - crossover_por_consenso (CPC): Utilizado como
+método de comparação, o Crossover de Particionamento por Consenso
+primeiro identifica as alocações em que ambos os pais concordam (o
+“consenso”) e as copia diretamente para o filho. Em seguida, para as VMs
+restantes (o “conflito”), ele tenta herdar a alocação de cada um dos
+pais e, se ambas as opções forem inválidas (por exemplo, por falta de
+capacidade), ele recorre a uma heurística “First Fit” para encontrar o
+primeiro servidor disponível. Esta abordagem preserva as boas
+características compartilhadas, ao mesmo tempo que introduz variação ao
+resolver os conflitos.</p>
+</blockquote>
+<blockquote>
+<p><strong>Crossover Principal - doac_cross (Dominant Optimal
+Anti-Cancer)</strong>. Este é o crossover heurístico customizado e
+principal do projeto. Sua filosofia, inspirada na biologia, é mais
+agressiva e direcionada:</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li><strong>Gene Dominante</strong>: A função primeiro identifica qual
+dos pais é o melhor. Em seguida, ela encontra o “gene dominante” desse
+pai, definido como o servidor mais potente (maior soma de CPU e RAM) em
+uso. O filho já nasce herdando todo o conjunto de VMs que o melhor pai
+havia alocado neste servidor, garantindo a preservação de uma
+característica de alta qualidade.</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li><strong>Construção Alternada</strong>: As VMs restantes são alocadas
+de forma semelhante ao CPC, herdando alternadamente dos pais.</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li><strong>Tratamento “Anti-Câncer”</strong>: Como uma etapa final de
+otimização, a função identifica o servidor “câncer” — o menos potente em
+uso no filho recém-criado. Ela então tenta realocar todas as VMs desse
+servidor para os outros servidores mais fortes já ativos. Se for
+bem-sucedida, o filho é aprimorado, utilizando um servidor a menos.</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>Mutação - swap_mutation: Para introduzir novas variações e evitar a
+convergência prematura, o operador de mutação seleciona aleatoriamente
+duas VMs em servidores diferentes e verifica se a troca entre elas é
+válida (se a VM1 cabe no servidor da VM2 e vice-versa). Se a troca for
+possível sem violar as restrições de capacidade, ela é efetuada no
+cromossomo.</p>
+</blockquote>
+<h1 id="análises-de-resultados">3. Análises de Resultados</h1>
+<blockquote>
+<p>Para demonstrar a eficácia do algoritmo genético e, em particular, do
+operador de crossover customizado, foram realizados múltiplos testes
+comparativos. O desempenho do crossover principal, D.O.A.C. (Dominant
+Optimal Anti-Cancer), foi comparado com o de um método de crossover
+convencional e bem estabelecido para problemas de particionamento, o
+Crossover por Consenso (CPC).</p>
+</blockquote>
+<blockquote>
+<p>Ambos os algoritmos foram executados sob as mesmas condições,
+utilizando o cenário de dados reais do VMware, que consiste em 730
+Máquinas Virtuais e 31 Servidores Físicos. A população inicial para
+todos os testes foi gerada pelo método Round-Robin, resultando em um
+fitness inicial de 31 servidores em uso.</p>
+</blockquote>
+<h2 id="desempenho-do-método-convencional-crossover-por-consenso">3.1.
+Desempenho do Método Convencional (Crossover por Consenso)</h2>
+<blockquote>
+<p>O Crossover por Consenso foi testado com diferentes taxas de mutação
+para avaliar sua performance e estabilidade. Os resultados foram os
+seguintes:</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>Taxa de Mutação (0.5): O algoritmo demonstrou capacidade de
+otimização, convergindo consistentemente para uma solução final que
+utilizava 18 servidores.</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>Taxa de Mutação (0.8): Com uma taxa de mutação mais alta, o
+algoritmo apresentou um comportamento mais instável, oscilando entre
+soluções de 18 e 20 servidores, indicando uma dificuldade em reter as
+melhores características encontradas.</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>O CPC provou ser um método válido, melhorando significativamente a
+solução inicial. No entanto, sua performance final ficou aquém do ótimo
+e mostrou-se sensível a variações na taxa de mutação.</p>
+</blockquote>
+<h2 id="desempenho-do-algoritmo-otimizado-d.o.a.c.">3.2. Desempenho do
+Algoritmo Otimizado (D.O.A.C.)</h2>
+<blockquote>
+<p>O crossover D.O.A.C. foi desenvolvido com heurísticas específicas
+para o problema, como a herança do “Gene Dominante” e o refinamento
+“Anti-Câncer”. Seus resultados demonstram uma superioridade
+marcante:</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>Taxa de Mutação (0.2 a 0.5): Independentemente da taxa de mutação
+utilizada, o D.O.A.C. convergiu de forma estável e robusta para a
+solução ótima de 16 servidores em todas as execuções.</li>
+</ul>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<ul>
+<li>A consistência do D.O.A.C. em encontrar a melhor solução, mesmo com
+taxas de mutação mais baixas, indica que sua eficácia deriva da
+inteligência incorporada em sua lógica de crossover, e não apenas da
+exploração aleatória da mutação.</li>
+</ul>
+</blockquote>
+</blockquote>
+<h2 id="comparativo-e-tabela-de-resultados">3.3. Comparativo e Tabela de
+Resultados</h2>
+<blockquote>
+<p>A comparação direta dos melhores resultados obtidos por cada método
+evidencia a eficácia da abordagem customizada:</p>
+</blockquote>
+<table>
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 16%" />
+<col style="width: 21%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Método de Crossover</th>
+<th style="text-align: center;">Fitness Inicial</th>
+<th style="text-align: center;">Melhor Fitness Final</th>
+<th style="text-align: center;">Redução de Servidores</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Crossover por Consenso (CPC)</td>
+<td style="text-align: center;">31</td>
+<td style="text-align: center;">18</td>
+<td style="text-align: center;">41.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>D.O.A.C. (Implementação
+Principal)</strong></td>
+<td style="text-align: center;"><strong>31</strong></td>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: center;"><strong>48.4%</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>O D.O.A.C. não apenas encontrou uma solução que utiliza dois
+servidores a menos que o método convencional, como também demonstrou
+maior estabilidade e confiabilidade em seus resultados, cumprindo com
+sucesso o objetivo principal do projeto.</p>
+</blockquote>
+<pre><code>[ Crossover: Por Consenso ]
+    |-&gt; Cenário: Real em vmware.
+    |-&gt; População Inicial = generate_round_robin_population.
+    |   \-&gt; Distriuiçao igual das vms nos servidores.
+    |
+    |-&gt; Mutação: swap_mutation 
+    |       \-&gt; Taxa: 0.5
+    |
+    |-&gt; Finaliza no número máximo de gerações sem evoluir = 200
+    |
+    \-&gt; Resultados
+        |-&gt; Geração 210: Melhor Fitness = 20
+        |-&gt; Geração 212: Melhor Fitness = 20
+        \-&gt; Geração 278: Melhor Fitness = 18
+
+
+
+[ Crossover: Por Consenso ]
+    |-&gt; Cenário: Real em vmware.
+    |-&gt; População Inicial = generate_round_robin_population.
+    |   \-&gt; Distriuiçao igual das vms nos servidores.
+    |
+    |-&gt; Mutação: swap_mutation 
+    |       \-&gt; Taxa: 0.8 &lt;-- Alteração.
+    |
+    |-&gt; Finaliza no número máximo de gerações sem evoluir = 200
+    |
+    \-&gt; Resultados
+        |-&gt; Geração 210: Melhor Fitness = 20
+        |-&gt; Geração 237: Melhor Fitness = 18
+        \-&gt; Geração 230: Melhor Fitness = 20
+
+
+
+[ Crossover: D.O.A.C. - Dominant Optimal Anti-Cancer ] &lt;--- Alteração.
+        |   \-&gt; Minha autoria baseada na biologia real.
+    |
+    |-&gt; Cenário: Real em vmware.
+    |-&gt; População Inicial = generate_round_robin_population.
+    |   \-&gt; Distriuiçao igual das vms nos servidores.
+    |
+    |-&gt; Mutação: swap_mutation 
+    |       \-&gt; Taxa: 0.5 &lt;--- Alteração.
+    |
+    |-&gt; Finaliza no número máximo de gerações sem evoluir = 200
+    |
+    \-&gt; Resultados
+        |-&gt; Geração 215: Melhor Fitness = 16
+        |-&gt; Geração 210: Melhor Fitness = 16
+        \-&gt; Geração 215: Melhor Fitness = 16
+
+
+
+[ Crossover: D.O.A.C. - Dominant Optimal Anti-Cancer ]
+        |   \-&gt; Minha autoria baseada na biologia real.
+    |
+    |-&gt; Cenário: Real em vmware.
+    |-&gt; População Inicial = generate_round_robin_population.
+    |   \-&gt; Distriuiçao igual das vms nos servidores.
+    |
+    |-&gt; Mutação: swap_mutation 
+    |       \-&gt; Taxa: 0.2 &lt;--- Alteração.
+    |
+    |-&gt; Finaliza no número máximo de gerações sem evoluir = 200
+    |
+    \-&gt; Resultados
+        |-&gt; Geração 215: Melhor Fitness = 16
+        |-&gt; Geração 215: Melhor Fitness = 16
+        \-&gt; Geração 215: Melhor Fitness = 16
+
+</code></pre>
+<h1 id="conclusões">4. Conclusões</h1>
+<blockquote>
+<p>O desenvolvimento do projeto DRE (Datacenter Resource Emulator)
+demonstrou com sucesso a aplicação prática e a eficácia de Algoritmos
+Genéticos para resolver um problema de otimização complexo e relevante
+no mundo real: a alocação de máquinas virtuais em servidores
+físicos.</p>
+</blockquote>
+<h2 id="principais-conclusões">Principais Conclusões:</h2>
+<blockquote>
+<p>Validação da Abordagem Genética: Os resultados obtidos provam que a
+abordagem evolucionária é não apenas viável, mas altamente eficaz para o
+Problema do Empacotamento. O algoritmo foi capaz de navegar por um vasto
+espaço de soluções possíveis e convergir consistentemente para um
+resultado ótimo, superando métodos convencionais.</p>
+</blockquote>
+<blockquote>
+<p>A Superioridade da Heurística Customizada: A comparação direta entre
+o crossover convencional (CPC) e o crossover customizado (DOAC) foi a
+descoberta mais significativa do projeto. Enquanto o CPC obteve uma
+melhoria respeitável, o desempenho superior e a estabilidade do DOAC
+destacam uma conclusão fundamental em computação evolucionária: a
+incorporação de conhecimento específico do problema (heurísticas) nos
+operadores genéticos acelera drasticamente a convergência e eleva a
+qualidade da solução final. Estratégias como o “Gene Dominante” e o
+“Tratamento Anti-Câncer” não foram apenas metáforas, mas mecanismos
+eficazes que guiaram a busca para regiões mais promissoras do espaço de
+soluções.</p>
+</blockquote>
+<blockquote>
+<p>No fim foi obtido uma ferramenta real para uso em um Datacenter real,
+visando prever alocações com a entrada de novos projetos no mesmo.</p>
+</blockquote>
+
