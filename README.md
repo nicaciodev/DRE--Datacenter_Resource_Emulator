@@ -1,4 +1,4 @@
-## DRE - Datacenter Resource Emulator
+# DRE - Datacenter Resource Emulator
 ![Static Badge](https://img.shields.io/badge/Vers%C3%A3o-2.1-blue) ![GitHub](https://img.shields.io/github/license/nicaciodev/DRE--Datacenter_Resource_Emulator) ![Static Badge](https://img.shields.io/badge/Data-27%2F07%2F2025-green)
 
 ___
@@ -38,7 +38,7 @@ ___
 [<img src="https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator/blob/main/Docs/Screenshot.png?raw=true" width=1579><br><sub>Screenshot</sub>](https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator/blob/main/Docs/Screenshot.png?raw=true)
 
 
-## Questionário Sobre Projeto
+## Questões Sobre Projeto
 
 * O que está sendo otimizando?
 
@@ -92,12 +92,66 @@ ___
 * `conda-osx-64.txt`: Arquivo conda para ambiente MAC.
 * `conda-win-64.txt`: Arquivo conda para ambiente Windows.
 * `environment.yml`: Gerência das libs utilizadas no Anaconda.
+* `requirements.txt`: Lista de libs para ambiente [venv] via python.
 * `datacenter_model.py`: Define os objetos do datacenter.
-* `genetic_algorithm.py`: Deine fitness, mutação, crossover etc.
+* `genetic_algorithm.py`: Define fitness, mutação, crossover etc.
 * `visualization.py`: A funções para montar o dashborad.
 * `Testes.txt`: Alguns resultados comparativos.
 
+#
+# Instalação
+> Três formas de instalação são descrita aqui:
 
+* Via [python -m venv ...] (Linux Debian 12)
+* Via conda-lock. (Ambiente de desenvolvimento fiel garantido)
+* Via Anaconda. (Windows, Mac e Linux)
+
+
+## Instalação via [python -m venv ...] (Linux)
+
+### Como Executar Localmente No Linux Debian 12
+1. Caso necessário, instale o [git] para começar.
+
+No Debian:
+```
+apt-get install git ;\
+apt install python3.11-venv
+```
+
+#
+2. Baixe o projeto:
+```
+git clone "https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator.git" ;\
+cd DRE--Datacenter_Resource_Emulator
+```
+
+#
+3. Crie o ambiente virtual e o ative:
+```
+python3 -m venv env ;\
+source env/bin/activate
+```
+
+#
+4. Atualize o pip:
+```
+pip3 install --upgrade pip
+```
+
+#
+5. Instale as bibliotecas necessária no ambiente virtual:
+```
+pip3 install -r requirements.txt
+```
+
+#
+6. Execute o script principal:
+
+```
+python main.py
+```
+
+#
 ## Instalação via conda-lock
 > A ferramenta conda-lock garante criar o ambiente diretamente a partir do arquivo de bloqueio mestre, garantindo a maior fidelidade ao ambiente de desenvolvimento original. 
 
@@ -144,6 +198,7 @@ conda activate fiap_tech_challenge_2
 python main.py
 ```
 
+#
 ## Instalação Via Anaconda - Alguns O.S.
 #### Pré-requisitos
 > Antes de começar, garanta que você tenha uma instalação do [Anaconda](https://www.anaconda.com/download/success) ou Miniconda em seu sistema. 
@@ -216,7 +271,8 @@ python main.py
 ```
 
 
-## Conclusões
+#
+# Conclusões
 > O desenvolvimento do projeto DRE (Datacenter Resource Emulator) demonstrou com sucesso a aplicação prática e a eficácia de Algoritmos Genéticos para resolver um problema de otimização complexo e relevante no mundo real: a alocação de máquinas virtuais em servidores físicos.
 
 #### Principais Conclusões:
