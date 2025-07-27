@@ -26,7 +26,7 @@ ___
 
 ## Documentação Completa
 
-> A documentação completa se encontra no diretório [Docs] deste projeto nos formatos: [Markdown], [PDF] e [HML].
+> A documentação completa se encontra no diretório [Docs](https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator/tree/main/Docs) deste projeto nos formatos: [Markdown](https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator/blob/main/Docs/DRE--Documentacao_Completa.md), [PDF](https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator/blob/main/Docs/DRE--Documentacao_Completa.pdf) e [HML].
 
 ## Resumo do Projeto
 > O DRE (Datacenter Resource Emulator) é um projeto desenvolvido como parte do Tech Challenge da Pós-Graduação em "IA para Devs". A aplicação utiliza um Algoritmo Genético (AG) para resolver um problema clássico de otimização: a alocação de Máquinas Virtuais (VMs) em um número mínimo de Servidores Físicos, conhecido como Bin Packing Problem.
