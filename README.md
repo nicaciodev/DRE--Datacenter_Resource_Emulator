@@ -35,6 +35,8 @@ ___
 
 > A simulação é visualizada em tempo real através de uma interface gráfica construída com Tkinter, exibindo a alocação das VMs e a evolução do fitness a cada geração.
 
+[<img src="https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator/blob/main/Docs/Screenshot.png?raw=true" width=1579><br><sub>Screenshot</sub>](https://github.com/nicaciodev/DRE--Datacenter_Resource_Emulator/blob/main/Docs/Screenshot.png?raw=true)
+
 
 ## Questionário Sobre Projeto
 
